@@ -1,14 +1,14 @@
 # 🏥 Hospital Demand Forecasting & Staff Optimization System
 An end-to-end Business Analytics project that helps hospitals move from reactive operations to proactive, data-driven patient flow management.
 
-## 🔗 Interactive Prototype
-Check out our interactive prototype here:  
-[Hospital Optimization Web Prototype](https://hospital-management-website-five.vercel.app/)
-
 ## 📌 Overview
 Hospitals often face peak-hour congestion, long patient waiting times, doctor overload, and inefficient staffing allocation. This project was developed to address those problems through a unified system that combines demand forecasting, staffing optimization, dashboard monitoring, a staff-facing web prototype, and a patient-support chatbot.
 
 The project uses the Internal Medicine Department of Hanoi Medical University Hospital as a case study. The goal is to help hospital managers anticipate demand, identify overload risk early, allocate staff more effectively, and guide patients toward less crowded time slots.
+
+## 🔗 Interactive Prototype
+Check out our interactive prototype here:  
+[Hospital Optimization Web Prototype](https://hospital-management-website-five.vercel.app/)
 
 ## 🚨 Business Problem
 This project addresses four key operational issues:
