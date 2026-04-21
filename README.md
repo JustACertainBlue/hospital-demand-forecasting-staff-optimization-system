@@ -1,4 +1,4 @@
-# 🏥 Hospital Demand Forecasting & Staff Optimization System
+# Hospital Demand Forecasting & Staff Optimization System
 An end-to-end Business Analytics project that helps hospitals move from reactive operations to proactive, data-driven patient flow management.
 
 ## 📌 Overview
