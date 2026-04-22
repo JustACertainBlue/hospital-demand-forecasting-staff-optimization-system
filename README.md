@@ -1,5 +1,4 @@
 # Hospital Demand Forecasting & Staff Optimization System
-An end-to-end Business Analytics project that helps hospitals move from reactive operations to proactive, data-driven patient flow management.
 
 ## 📌 Overview
 Hospitals often face peak-hour congestion, long patient waiting times, doctor overload, and inefficient staffing allocation. This project was developed to address those problems through a unified system that combines demand forecasting, staffing optimization, dashboard monitoring, a staff-facing web prototype, and a patient-support chatbot.
