@@ -66,7 +66,7 @@ This flow turns analytical outputs into practical operational decisions.
 - [`chatbot/`](https://github.com/JustACertainBlue/hospital-demand-forecasting-staff-optimization-system/tree/main/chatbot) – n8n workflow, FAQ logic, and scheduling rules
 - [`dashboard/`](https://github.com/JustACertainBlue/hospital-demand-forecasting-staff-optimization-system/tree/main/dashboard) – Power BI dashboard file
 - [`web-app/`](https://github.com/JustACertainBlue/hospital-demand-forecasting-staff-optimization-system/tree/main/web-app) – hospital optimization web prototype
-- [`workflow/'](https://github.com/JustACertainBlue/hospital-demand-forecasting-staff-optimization-system/tree/main/deployment) – deployment notes and system flow
+- [`workflow/`](https://github.com/JustACertainBlue/hospital-demand-forecasting-staff-optimization-system/tree/main/deployment) – deployment notes and system flow
   
 ## 🛠️ Tools & Technologies
 - Python
