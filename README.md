@@ -59,7 +59,7 @@ Data → Forecasting → Overload Detection → Staffing Recommendation → Dash
 This flow turns analytical outputs into practical operational decisions.
 
 ## 🗂️ Repository Structure
-- `[docs](https://github.com/JustACertainBlue/hospital-demand-forecasting-staff-optimization-system/tree/main/docs)/` – report, slides, screenshots, system architecture
+- `docs/` – report, proposals, screenshots, system architecture
 - `data/` – raw, processed, and sample datasets
 - `notebooks/` – exploratory analysis and modeling notebooks
 - `src/` – reusable code for NLP, forecasting, and optimization
