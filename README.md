@@ -60,16 +60,14 @@ This flow turns analytical outputs into practical operational decisions.
 
 ## 🗂️ Repository Structure
 - [`docs/`](https://github.com/JustACertainBlue/hospital-demand-forecasting-staff-optimization-system/tree/main/docs) – report, proposals, screenshots, system architecture
-- `data/` – raw, processed, and sample datasets
-- `notebooks/` – exploratory analysis and modeling notebooks
-- `src/` – reusable code for NLP, forecasting, and optimization
-- `api/` – FastAPI service for model inference
-- `chatbot/` – n8n workflow, FAQ logic, and scheduling rules
-- `dashboard/` – Power BI dashboard file
-- `web-app/` – hospital optimization web prototype
-- `deployment/` – deployment notes and system flow
-- `results/` – model outputs and staffing recommendations
-
+- [`data/`](https://github.com/JustACertainBlue/hospital-demand-forecasting-staff-optimization-system/tree/main/data) – raw, processed, and sample datasets
+- [`notebooks/`](https://github.com/JustACertainBlue/hospital-demand-forecasting-staff-optimization-system/tree/main/notebooks) – exploratory analysis and modeling notebooks
+- [`api/`](https://github.com/JustACertainBlue/hospital-demand-forecasting-staff-optimization-system/tree/main/api) – FastAPI service for model inference
+- [`chatbot/`](https://github.com/JustACertainBlue/hospital-demand-forecasting-staff-optimization-system/tree/main/chatbot) – n8n workflow, FAQ logic, and scheduling rules
+- [`dashboard/`](https://github.com/JustACertainBlue/hospital-demand-forecasting-staff-optimization-system/tree/main/dashboard) – Power BI dashboard file
+- [`web-app/`](https://github.com/JustACertainBlue/hospital-demand-forecasting-staff-optimization-system/tree/main/web-app) – hospital optimization web prototype
+- [`workflow/](https://github.com/JustACertainBlue/hospital-demand-forecasting-staff-optimization-system/tree/main/deployment)` – deployment notes and system flow
+  
 ## 🛠️ Tools & Technologies
 - Python
 - FastAPI
