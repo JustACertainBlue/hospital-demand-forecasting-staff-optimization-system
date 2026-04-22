@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html class="light" lang="vi">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Công cụ Tối ưu Điều phối Bệnh viện - Tổng quan</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap"
+    rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet">
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-primary-fixed-variant": "#004492",
+            "on-surface-variant": "#424752",
+            "on-surface": "#191c1d",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#ffc3c1",
+            "surface-dim": "#d9dadb",
+            "secondary-container": "#90efef",
+            "on-background": "#191c1d",
+            "background": "#f8f9fa",
+            "surface-container": "#edeeef",
+            "surface-bright": "#f8f9fa",
+            "secondary-fixed": "#93f2f2",
+            "inverse-on-surface": "#f0f1f2",
+            "surface-container-low": "#f3f4f5",
+            "primary-fixed-dim": "#acc7ff",
+            "tertiary-container": "#9a3a3c",
+            "on-secondary-fixed": "#002020",
+            "on-primary-fixed": "#001a40",
+            "on-error": "#ffffff",
+            "inverse-primary": "#acc7ff",
+            "on-secondary-container": "#006e6e",
+            "primary-container": "#0057b7",
+            "surface-container-high": "#e7e8e9",
+            "on-primary-container": "#bed2ff",
+            "secondary-fixed-dim": "#76d6d5",
+            "on-tertiary-fixed-variant": "#80272b",
+            "on-secondary-fixed-variant": "#004f4f",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-highest": "#e1e3e4",
+            "error": "#ba1a1a",
+            "outline": "#727784",
+            "on-tertiary": "#ffffff",
+            "surface": "#f8f9fa",
+            "error-container": "#ffdad6",
+            "on-secondary": "#ffffff",
+            "primary-fixed": "#d7e2ff",
+            "tertiary-fixed": "#ffdad8",
+            "tertiary": "#7b2327",
+            "primary": "#00408b",
+            "surface-tint": "#0e5bbb",
+            "secondary": "#006a6a",
+            "on-tertiary-fixed": "#410007",
+            "surface-variant": "#e1e3e4",
+            "outline-variant": "#c2c6d4",
+            "tertiary-fixed-dim": "#ffb3b1",
+            "on-primary": "#ffffff",
+            "inverse-surface": "#2e3132"
+          },
+          fontFamily: {
+            "headline": ["Manrope"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+        },
+      },
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8f9fa;
+      color: #191c1d;
+    }
+
+    .font-manrope {
+      font-family: 'Manrope', sans-serif;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .sidebar-active {
+      background-color: white;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+</head>
+
+<body class="flex min-h-screen">
+  <!-- SideNavBar -->
+  <aside class="fixed left-0 top-0 h-full flex flex-col p-6 gap-6 bg-[#f8fbff] w-64 border-r border-slate-100 z-50">
+    <div class="flex items-center gap-3 mb-8 px-4 mb-4">
+      <div>
+        <h2 class="font-manrope font-bold text-[#4c72d3] text-lg leading-tight">Hanoi Medical University Hospital</h2>
+        <p class="text-[10px] uppercase tracking-widest text-slate-500 font-extrabold mt-1">SHIFT MANAGEMENT</p>
+      </div>
+    </div>
+    <nav class="flex-1 flex flex-col gap-1 overflow-y-auto no-scrollbar"><a
+        class="flex items-center gap-4 bg-[#f0f4ff] text-[#4c72d3] rounded-xl px-4 py-3 font-inter text-sm font-bold transition-all"
+        href="index.html"><span class="material-symbols-outlined text-[22px]"
+          style="font-variation-settings: &quot;FILL&quot; 0, &quot;wght&quot; 500;">grid_view</span><span>Dashboard</span></a><a
+        class="flex items-center gap-4 text-slate-500 px-4 py-3 font-inter text-sm font-semibold hover:bg-blue-50/50 rounded-xl transition-all"
+        href="shifts.html"><span class="material-symbols-outlined text-[22px]">schedule</span><span>Shifts</span></a><a
+        class="flex items-center gap-4 text-slate-500 px-4 py-3 font-inter text-sm font-semibold hover:bg-blue-50/50 rounded-xl transition-all"
+        href="staff.html"><span class="material-symbols-outlined text-[22px]">group</span><span>Staff</span></a><a
+        class="flex items-center gap-4 text-slate-500 px-4 py-3 font-inter text-sm font-semibold hover:bg-blue-50/50 rounded-xl transition-all"
+        href="reports.html"><span class="material-symbols-outlined text-[22px]">bar_chart</span><span>Reports</span></a>
+    </nav>
+    <div class="mt-auto space-y-6"><button id="new-shift-btn"
+        class="w-full bg-[#0057B7] text-white py-3.5 px-4 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-blue-700 transition-all shadow-md shadow-blue-200"><span
+          class="material-symbols-outlined text-lg">add</span><span class="text-sm">New Shift</span></button>
+      <div class="pt-4 space-y-1"><a
+          class="flex items-center gap-4 text-slate-500 px-4 py-2 font-inter text-sm font-semibold hover:text-primary transition-all"
+          href="#"><span class="material-symbols-outlined text-[22px]">settings</span><span>Settings</span></a><a
+          class="flex items-center gap-4 text-slate-500 px-4 py-2 font-inter text-sm font-semibold hover:text-primary transition-all"
+          href="#"><span class="material-symbols-outlined text-[22px]">help_outline</span><span>Help</span></a></div>
+    </div>
+  </aside>
+  <!-- Main Content Canvas -->
+  <main class="flex-1 ml-64 min-h-screen bg-surface flex flex-col">
+    <!-- TopNavBar -->
+    <header
+      class="sticky top-0 z-40 bg-white dark:bg-slate-900 flex justify-between items-center w-full px-8 py-4 border-b border-slate-100 dark:border-slate-800">
+      <div class="flex items-center gap-4">
+        <h1 class="font-manrope font-bold text-lg text-blue-800 dark:text-blue-300">Công cụ Tối ưu Điều phối Bệnh viện
+        </h1>
+        <div class="h-4 w-[1px] bg-slate-200 mx-2"></div>
+        <div class="relative flex items-center">
+          <div id="date-header-trigger"
+            class="flex items-center gap-2 text-slate-500 text-sm cursor-pointer hover:bg-slate-50 p-1.5 rounded-lg transition-colors z-10">
+            <span class="material-symbols-outlined text-sm">calendar_today</span>
+            <span id="current-date-display" class="font-medium">Thứ Tư, 1 Tháng 4, 2026</span>
+          </div>
+          <!-- Hidden input that we will trigger programmatically -->
+          <input type="date" id="date-picker"
+            class="absolute left-0 top-1/2 opacity-0 w-0 h-0 pointer-events-none -z-10">
+        </div>
+      </div>
+      <div class="flex items-center gap-6">
+        <div class="flex gap-4">
+          <button class="text-slate-500 hover:text-primary transition-colors">
+            <span class="material-symbols-outlined">notifications</span>
+          </button>
+          <button class="text-slate-500 hover:text-primary transition-colors">
+            <span class="material-symbols-outlined">settings</span>
+          </button>
+        </div>
+        <div class="flex items-center gap-3 pl-6 border-l border-slate-100">
+          <div class="text-right">
+            <p class="text-sm font-bold text-on-surface">BS. Nguyễn Văn A</p>
+            <p class="text-[10px] text-slate-500 uppercase font-bold">Quản trị hệ thống</p>
+          </div>
+          <img alt="Hồ sơ người dùng" class="w-10 h-10 rounded-full border-2 border-white shadow-sm object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZWyz6cmw3ERaKYx5D0WnWRTaJGMV36jyb1OsgqPK96JkYTGMrNeR6R3789oYpQMDsTYGhMs95A4CEIdY7wvhZDcT0Uzz3ZnQngZILkMtjs0UDNz2Nmb9Lo_zhFlATCelCAwQpFmbQvxqgGm1zcRoBY5sTdxtNlBb5J8rIydJRnRzNhSr5-Wj74ZEUs3S5WlVAP2mrh9p0bK2iM00koLpj_JCTyzNe6sDWBkB9qSnqSV46D7Uyi_RiVsif8GPPnJBp2zSun_3Bvg60">
+        </div>
+      </div>
+    </header>
+    <!-- Content Area -->
+    <div class="p-8 space-y-8 flex-1 overflow-auto max-w-7xl mx-auto w-full">
+      <!-- Filters & Actions Row -->
+      <div class="flex justify-between items-end">
+        <div class="space-y-1">
+          <h2 class="font-manrope text-3xl font-extrabold text-on-surface tracking-tight">Tổng quan Vận hành</h2>
+          <p class="text-on-surface-variant font-medium">Theo dõi và tối ưu hóa nguồn lực bệnh viện thời gian thực.</p>
+        </div>
+        <div id="filter-group" class="flex items-center gap-3 bg-surface-container-low p-1.5 rounded-xl">
+          <button data-dept="all"
+            class="filter-btn px-4 py-2 bg-primary text-white shadow-sm rounded-lg text-sm font-bold transition-all">Toàn
+            viện</button>
+          <button data-dept="noi"
+            class="filter-btn px-4 py-2 text-sm font-medium text-on-surface-variant hover:bg-white/50 rounded-lg transition-all">Khoa
+            Nội</button>
+          <button data-dept="ngoai"
+            class="filter-btn px-4 py-2 text-sm font-medium text-on-surface-variant hover:bg-white/50 rounded-lg transition-all">Khoa
+            Ngoại</button>
+          <button data-dept="icu"
+            class="filter-btn px-4 py-2 text-sm font-medium text-on-surface-variant hover:bg-white/50 rounded-lg transition-all">Hồi
+            sức (ICU)</button>
+          <div class="w-px h-6 bg-slate-300 mx-1"></div>
+          <button class="p-2 text-on-surface-variant hover:bg-white/50 rounded-lg">
+            <span class="material-symbols-outlined text-lg">filter_list</span>
+          </button>
+        </div>
+      </div>
+      <!-- KPI Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div onclick="window.location.href='shifts.html'"
+          class="cursor-pointer group hover:ring-2 hover:ring-primary transition-all bg-surface-container-lowest p-6 rounded-xl shadow-sm space-y-4">
+          <div class="flex justify-between items-start">
+            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
+              <span class="material-symbols-outlined text-2xl">groups</span>
+            </div>
+            <span id="kpi-patients-badge"
+              class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">+12%</span>
+          </div>
+          <div>
+            <p class="text-sm font-bold text-slate-500 uppercase tracking-wider">Tổng bệnh nhân dự báo</p>
+            <h3 id="kpi-patients-val" class="text-3xl font-manrope font-extrabold text-on-surface">1,284</h3>
+          </div>
+          <div class="h-1 bg-slate-100 rounded-full overflow-hidden">
+            <div id="kpi-patients-bar" class="h-full bg-blue-500 w-3/4 transition-all duration-500"></div>
+          </div>
+        </div>
+        <div onclick="window.location.href='shifts.html'"
+          class="cursor-pointer group hover:ring-2 hover:ring-red-500 transition-all bg-surface-container-lowest p-6 rounded-xl shadow-sm space-y-4 border-l-4 border-error">
+          <div class="flex justify-between items-start">
+            <div class="w-12 h-12 bg-red-50 text-red-600 rounded-xl flex items-center justify-center">
+              <span class="material-symbols-outlined text-2xl">priority_high</span>
+            </div>
+            <span id="kpi-overload-badge" class="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded-full">Khẩn
+              cấp</span>
+          </div>
+          <div>
+            <p class="text-sm font-bold text-slate-500 uppercase tracking-wider">Số ca quá tải trong 7 ngày tới</p>
+            <h3 id="kpi-overload-val" class="text-3xl font-manrope font-extrabold text-on-surface">18</h3>
+          </div>
+        </div>
+        <div onclick="window.location.href='shifts.html'"
+          class="cursor-pointer group hover:ring-2 hover:ring-indigo-500 transition-all bg-surface-container-lowest p-6 rounded-xl shadow-sm space-y-4">
+          <div class="flex justify-between items-start">
+            <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center">
+              <span class="material-symbols-outlined text-2xl">stethoscope</span>
+            </div>
+            <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full">Trực tuyến</span>
+          </div>
+          <div>
+            <p class="text-sm font-bold text-slate-500 uppercase tracking-wider">SỐ BÁC SĨ TRỰC</p>
+            <h3 id="kpi-doctors-val" class="text-3xl font-manrope font-extrabold text-on-surface">42</h3>
+          </div>
+          <p class="text-[11px] text-slate-500 font-medium">Đang trong ca</p>
+        </div>
+        <div onclick="window.location.href='shifts.html'"
+          class="cursor-pointer group hover:ring-2 hover:ring-orange-500 transition-all bg-surface-container-lowest p-6 rounded-xl shadow-sm space-y-4">
+          <div class="flex justify-between items-start">
+            <div class="w-12 h-12 bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center">
+              <span class="material-symbols-outlined text-2xl">person_add</span>
+            </div>
+            <span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded-full">Thiếu hụt</span>
+          </div>
+          <div>
+            <p class="text-sm font-bold text-slate-500 uppercase tracking-wider">Số bác sĩ cần bổ sung</p>
+            <h3 id="kpi-missing-val" class="text-3xl font-manrope font-extrabold text-on-surface">06</h3>
+          </div>
+          <div class="flex gap-1" id="kpi-missing-bar">
+            <!-- Will be generated by JS -->
+            <div class="w-full h-1 bg-teal-500 rounded-full"></div>
+            <div class="w-full h-1 bg-teal-500 rounded-full"></div>
+            <div class="w-full h-1 bg-slate-200 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+      <div class="space-y-6">
+        <div class="flex items-center justify-between">
+          <h3 class="font-manrope text-xl font-bold">Trạng thái ca trực hôm nay</h3>
+          <div class="flex gap-2">
+            <div
+              class="flex items-center gap-1.5 px-2 py-1 bg-secondary-container rounded text-[11px] font-bold text-on-secondary-container">
+              <span class="w-2 h-2 rounded-full bg-secondary"></span> Ổn định
+            </div>
+            <div
+              class="flex items-center gap-1.5 px-2 py-1 bg-tertiary-fixed rounded text-[11px] font-bold text-on-tertiary-fixed-variant">
+              <span class="w-2 h-2 rounded-full bg-tertiary"></span> Cảnh báo
+            </div>
+            <div
+              class="flex items-center gap-1.5 px-2 py-1 bg-error-container rounded text-[11px] font-bold text-on-error-container">
+              <span class="w-2 h-2 rounded-full bg-error"></span> Rủi ro cao
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 gap-4">
+          <div id="shift-morning"
+            class="group cursor-pointer hover:-translate-y-1 bg-surface-container-lowest p-5 rounded-xl border-l-4 border-secondary shadow-sm hover:shadow-md transition-all duration-300">
+            <div class="flex justify-between items-center">
+              <div class="flex items-center gap-4">
+                <div
+                  class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-secondary/10 group-hover:text-secondary transition-colors">
+                  <span class="material-symbols-outlined">light_mode</span>
+                </div>
+                <div>
+                  <h4 class="font-bold text-on-surface">Ca Sáng (07:15 - 12:00)</h4>
+                  <p id="shift-morning-desc" class="text-xs text-slate-500 font-medium">Đang diễn ra • 142 nhân viên
+                    đang trực</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <div id="shift-morning-status"
+                  class="text-sm font-bold text-on-secondary-container px-3 py-1 bg-secondary-container rounded-full transition-colors duration-300">
+                  Rủi ro: Thấp</div>
+                <p id="shift-morning-perf" class="text-[10px] mt-1 text-slate-400">Hiệu suất: 92%</p>
+              </div>
+            </div>
+          </div>
+          <div id="shift-afternoon"
+            class="group cursor-pointer hover:-translate-y-1 bg-surface-container-lowest p-5 rounded-xl border-l-4 border-tertiary shadow-sm hover:shadow-md transition-all duration-300">
+            <div class="flex justify-between items-center">
+              <div class="flex items-center gap-4">
+                <div
+                  class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-tertiary/10 group-hover:text-tertiary transition-colors">
+                  <span class="material-symbols-outlined">wb_twilight</span>
+                </div>
+                <div>
+                  <h4 class="font-bold text-on-surface">Ca Chiều (13:30 - 16:45)</h4>
+                  <p id="shift-afternoon-desc" class="text-xs text-slate-500 font-medium">Sắp tới • Dự báo tăng 15% bệnh
+                    nhân ngoại trú</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <div id="shift-afternoon-status"
+                  class="text-sm font-bold text-on-tertiary-fixed-variant px-3 py-1 bg-tertiary-fixed rounded-full transition-colors duration-300">
+                  Rủi ro: Trung bình</div>
+                <p id="shift-afternoon-perf" class="text-[10px] mt-1 text-slate-400">Điều phối cần thiết: +2 Điều dưỡng
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="font-manrope text-xl font-bold">Bảng tóm tắt vận hành khoa/phòng</h3><button id="export-pdf-btn"
+            class="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-primary transition-colors"><span
+              class="material-symbols-outlined text-lg">download</span>Xuất báo cáo PDF</button>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-surface-container-high">
+              <tr>
+                <th class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-widest">Khoa / Phòng</th>
+                <th class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-widest text-center">Số bệnh
+                  nhân</th>
+                <th class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-widest text-center">hiệu suất
+                </th>
+                <th class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-widest text-center">Nhân lực
+                  hiện có</th>
+                <th class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-widest">Trạng thái rủi ro</th>
+                <th class="px-6 py-4 text-xs font-bold text-slate-600 uppercase tracking-widest"></th>
+              </tr>
+            </thead>
+            <tbody id="table-body" class="divide-y divide-slate-100">
+              <!-- Dynamically populated by Javascript to match Date and Dept filters perfectly -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <footer class="bg-surface-container-high py-3 px-8 flex justify-between items-center">
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-2">
+          <div class="w-2 h-2 rounded-full bg-emerald-500"></div><span
+            class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Hệ thống: Trực tuyến</span>
+        </div>
+        <div id="footer-update-time" class="text-[11px] text-slate-400 font-medium">Cập nhật lần cuối: 10:42:05 AM</div>
+      </div>
+      <div class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">© 2024 Sentinel Health Systems •
+        Vietnam</div>
+    </footer>
+  </main>
+
+  <!-- Toast Notification -->
+  <div id="toast"
+    class="fixed bottom-8 right-8 bg-blue-800 text-white px-6 py-4 rounded-2xl shadow-2xl transform translate-y-24 opacity-0 transition-all duration-300 z-50 flex items-center gap-3">
+    <span class="material-symbols-outlined">info</span>
+    <span id="toast-message">Thông báo hệ thống</span>
+  </div>
+
+  <script>
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/1fk0e05GIeKqRnCfs8XplwkpNKcctWoUFcfYfIbTFFPQ/export?format=csv&gid=1867757610';
+    let sheetData = [];
+
+    async function fetchSheetData() {
+      try {
+        const response = await fetch(CSV_URL);
+        const text = await response.text();
+        const rows = text.split('\n').map(row => row.split(','));
+        const headers = rows[0];
+        sheetData = rows.slice(1).map(row => {
+          let obj = {};
+          headers.forEach((header, i) => {
+            obj[header.trim()] = row[i]?.trim();
+          });
+          return obj;
+        });
+
+        // Add manual backfill data for March 30-31 as requested
+        const backfill = [
+          { date: '2026-03-30', shift: 'Morning', appointments_booked: '124', forecast_total_patients: '631', current_doctor: '14', capacity: '420', ultilization: '1.50', overload_risk_label: 'Very High', required_doctor: '21' },
+          { date: '2026-03-30', shift: 'Afternoon', appointments_booked: '92', forecast_total_patients: '343', current_doctor: '14', capacity: '420', ultilization: '0.82', overload_risk_label: 'Medium', required_doctor: '14' },
+          { date: '2026-03-31', shift: 'Morning', appointments_booked: '139', forecast_total_patients: '541', current_doctor: '14', capacity: '420', ultilization: '1.29', overload_risk_label: 'Very High', required_doctor: '18' },
+          { date: '2026-03-31', shift: 'Afternoon', appointments_booked: '66', forecast_total_patients: '297', current_doctor: '14', capacity: '420', ultilization: '0.71', overload_risk_label: 'Medium', required_doctor: '14' }
+        ];
+        sheetData = [...backfill, ...sheetData];
+
+        showToast('Đã cập nhật dữ liệu từ Google Sheet');
+        updateDashboardData();
+      } catch (error) {
+        console.error('Error fetching sheet data:', error);
+      }
+    }
+
+    // Utility functions to handle risk level logic as requested
+    function updateRiskStatus(utilization) {
+      if (utilization > 1.2) {
+        return { level: 'Rất cao', style: 'bg-red-100 text-red-700', barColor: 'bg-red-600', perfColor: 'text-red-700' };
+      } else if (utilization > 1.0) {
+        return { level: 'Cao', style: 'bg-orange-100 text-orange-700', barColor: 'bg-orange-500', perfColor: 'text-orange-700' };
+      } else if (utilization >= 0.7) {
+        return { level: 'Trung bình', style: 'bg-blue-100 text-blue-700', barColor: 'bg-blue-500', perfColor: 'text-blue-700' };
+      } else {
+        return { level: 'Thấp', style: 'bg-emerald-100 text-emerald-700', barColor: 'bg-emerald-500', perfColor: 'text-emerald-700' };
+      }
+    }
+
+    function translateOverloadRisk(label) {
+      const map = {
+        'Very High': 'Rất cao',
+        'High': 'Cao',
+        'Medium': 'Trung bình',
+        'Low': 'Thấp'
+      };
+      return map[label] || label;
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      toastMsg.innerText = message;
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 3000);
+    }
+
+    // 1. Time & Data Mocking Logic
+    const datePicker = document.getElementById('date-picker');
+    const dateDisplay = document.getElementById('current-date-display');
+    const footerTime = document.getElementById('footer-update-time');
+
+    let currentDate = new Date();
+    let currentDept = 'all';
+
+    // Mock Database for varying states
+    // Mock Database structurally mapped for perfect numerical alignment
+    const departmentsConfig = {
+      'capcuu': {
+        name: 'Khoa Cấp cứu (A&E)', icon: 'emergency', iconBg: 'bg-blue-100', iconColor: 'text-blue-600',
+        basePatients: 850, baseOverload: 8, baseDocs: 15, baseNurses: 40, baseMissing: 2,
+        perf: 95, riskLevel: 'Rất cao', riskStyle: 'bg-error-container text-on-error-container', barColor: 'bg-red-500', perfColor: 'text-red-600',
+        morningRisk: 'Cao', morningPerf: 'Quá tải', afternoonRisk: 'Cao', afternoonPref: 'Gia tăng đột biến', nightRisk: 'Cao', nightPerf: 'Nguy kịch',
+        morningDesc: 'Đang diễn ra • 15 bác sĩ đang trực', afternoonDesc: 'Sắp tới • Dự báo cấp cứu chấn thương tăng 20%', nightDesc: 'Dự báo • 1 bác sĩ kẹt ca mổ khẩn'
+      },
+      'icu': {
+        name: 'Hồi sức tích cực (ICU)', icon: 'monitor_heart', iconBg: 'bg-teal-100', iconColor: 'text-teal-600',
+        basePatients: 120, baseOverload: 2, baseDocs: 12, baseNurses: 24, baseMissing: 1,
+        perf: 72, riskLevel: 'Bình thường', riskStyle: 'bg-secondary-container text-on-secondary-container', barColor: 'bg-teal-500', perfColor: 'text-teal-600',
+        morningRisk: 'Trung bình', morningPerf: '88%', afternoonRisk: 'Cao', afternoonPref: '+3 Bác sĩ ICU', nightRisk: 'Trung bình', nightPerf: 'Ca khó',
+        morningDesc: 'Đang diễn ra • 12 bác sĩ đang trực', afternoonDesc: 'Sắp tới • Dự kiến nhận 3 ca dị tuyến nặng', nightDesc: 'Dự báo • 1 thiết bị ECMO đang bảo trì'
+      },
+      'noi': {
+        name: 'Khoa Nội tổng hợp', icon: 'medical_services', iconBg: 'bg-orange-100', iconColor: 'text-orange-600',
+        basePatients: 1850, baseOverload: 3, baseDocs: 18, baseNurses: 45, baseMissing: 0,
+        perf: 88, riskLevel: 'Trung bình', riskStyle: 'bg-tertiary-fixed text-on-tertiary-fixed-variant', barColor: 'bg-orange-500', perfColor: 'text-orange-600',
+        morningRisk: 'Thấp', morningPerf: '95%', afternoonRisk: 'Thấp', afternoonPref: 'Đủ bác sĩ', nightRisk: 'Trung bình', nightPerf: '+1 Bác sĩ',
+        morningDesc: 'Đang diễn ra • 18 bác sĩ đang trực', afternoonDesc: 'Sắp tới • Lịch khám ngoại trú ổn định', nightDesc: 'Dự báo • Bệnh nhân lưu viện tăng nhẹ'
+      },
+      'ngoai': {
+        name: 'Khoa Ngoại', icon: 'healing', iconBg: 'bg-indigo-100', iconColor: 'text-indigo-600',
+        basePatients: 2180, baseOverload: 5, baseDocs: 20, baseNurses: 55, baseMissing: 2,
+        perf: 85, riskLevel: 'Cảnh báo', riskStyle: 'bg-tertiary-container text-on-tertiary-container', barColor: 'bg-indigo-500', perfColor: 'text-indigo-600',
+        morningRisk: 'Trung bình', morningPerf: '85%', afternoonRisk: 'Cao', afternoonPref: '+1 Phẫu thuật viên', nightRisk: 'Cao', nightPerf: 'Thiếu người trực ngoại khoa',
+        morningDesc: 'Đang diễn ra • 20 bác sĩ đang trực', afternoonDesc: 'Sắp tới • 4 ca đại phẫu thuật đã lên lịch', nightDesc: 'Dự báo • Thiếu bác sĩ tại phòng hồi tỉnh'
+      }
+    };
+
+    const allData = {
+      name: 'Toàn viện',
+      basePatients: 5000, baseOverload: 18, baseDocs: 65, baseMissing: 6,
+      morningRisk: 'Thấp', morningPerf: '92%', afternoonRisk: 'Trung bình', afternoonPref: '+2 Bác sĩ', nightRisk: 'Cao', nightPerf: 'Thiếu hụt nghiêm trọng',
+      morningDesc: 'Đang diễn ra • 65 bác sĩ toàn viện', afternoonDesc: 'Sắp tới • Dự báo tăng 15% bệnh nhân cấp cứu đa khoa', nightDesc: 'Dự báo • 3 bác sĩ chuyên khoa xin nghỉ đột xuất'
+    };
+
+    function generateRandomVariation(baseValue, dateSeed) {
+      const varianceBase = (dateSeed.getDate() * 1.5 + dateSeed.getMonth() * 3) % 40;
+      const direction = (dateSeed.getDate() % 2 === 0) ? 1 : -1;
+      const variation = Math.floor((varianceBase / 100) * baseValue) * direction;
+      return Math.max(0, baseValue + variation);
+    }
+
+    function animateValue(obj, start, end, duration) {
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        obj.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString('vi-VN');
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        }
+      };
+      window.requestAnimationFrame(step);
+    }
+
+    function updateDashboardData() {
+      // Find today's forecast from sheet if available (for 'noi' department)
+      const dateStr = currentDate.toISOString().split('T')[0];
+      const todayForecasts = sheetData.filter(d => d.date === dateStr);
+
+      // Update Khoa Nội config based on sheet data
+      if (todayForecasts.length > 0) {
+        const morning = todayForecasts.find(f => f.shift === 'Morning');
+        const afternoon = todayForecasts.find(f => f.shift === 'Afternoon');
+
+        if (morning) {
+          departmentsConfig['noi'].basePatients = parseInt(morning.forecast_total_patients) || departmentsConfig['noi'].basePatients;
+          departmentsConfig['noi'].baseDocs = parseInt(morning.current_doctor) || departmentsConfig['noi'].baseDocs;
+          departmentsConfig['noi'].baseMissing = Math.max(0, (parseInt(morning.required_doctor) || 0) - (parseInt(morning.current_doctor) || 0));
+          departmentsConfig['noi'].riskLevel = translateOverloadRisk(morning.overload_risk_label);
+          departmentsConfig['noi'].morningDesc = `Đang diễn ra • ${morning.current_doctor} BS đang trực`;
+          departmentsConfig['noi'].morningRisk = translateOverloadRisk(morning.overload_risk_label);
+        }
+        if (afternoon) {
+          departmentsConfig['noi'].afternoonDesc = `Sắp tới • Dự báo ${afternoon.forecast_total_patients} bệnh nhân`;
+          departmentsConfig['noi'].afternoonRisk = translateOverloadRisk(afternoon.overload_risk_label);
+        }
+      }
+
+      // Calculate 7-day overload count for Khoa Nội
+      const sevenDaysLater = new Date(currentDate);
+      sevenDaysLater.setDate(currentDate.getDate() + 7);
+
+      const forecastInWindow = sheetData.filter(d => {
+        const dDate = new Date(d.date);
+        return dDate >= currentDate && dDate <= sevenDaysLater;
+      });
+
+      const overloadCount = forecastInWindow.filter(f =>
+        f.overload_risk_label === 'High' || f.overload_risk_label === 'Very High'
+      ).length;
+
+      // Monday-Fri ~5000, Sat ~3000, Sun 0
+      const dayOfWeek = currentDate.getDay();
+      let targetTotalPatients = 5000;
+      if (dayOfWeek === 6) targetTotalPatients = 3000;
+      if (dayOfWeek === 0) targetTotalPatients = 0;
+
+      // Fetch shift status copy from either 'all' or specific dept
+      const shiftDataCopy = currentDept === 'all' ? allData : departmentsConfig[currentDept];
+
+      const keys = currentDept === 'all' ? Object.keys(departmentsConfig) : [currentDept];
+
+      let sumPatients = 0, sumOverload = overloadCount, sumDocs = 0, sumMissing = 0;
+      let tbodyHtml = '';
+
+      keys.forEach((key, index) => {
+        const d = departmentsConfig[key];
+
+        // Generate deterministic variations
+        let pPatients = generateRandomVariation(d.basePatients, currentDate);
+
+        // Adjust for target total
+        if (currentDept === 'all' && targetTotalPatients > 0) {
+          pPatients = Math.floor((d.basePatients / allData.basePatients) * targetTotalPatients);
+          pPatients = generateRandomVariation(pPatients, currentDate);
+        } else if (targetTotalPatients === 0) {
+          pPatients = 0;
+        }
+
+        const pOverload = key === 'noi' ? overloadCount : generateRandomVariation(d.baseOverload, currentDate);
+        const pDocs = targetTotalPatients === 0 ? 0 : generateRandomVariation(d.baseDocs, currentDate);
+        const pMissing = targetTotalPatients === 0 ? 0 : (key === 'noi' ? d.baseMissing : generateRandomVariation(d.baseMissing, currentDate));
+        
+        // Calculate Utilization and Performance
+        const utilization = targetTotalPatients === 0 ? 0 : (pPatients / (Math.max(1, pDocs) * 30));
+        const pPerf = Math.floor(utilization * 100);
+        
+        // Update Risk Metadata dynamically based on utilization formula
+        const riskMeta = updateRiskStatus(utilization);
+        const currentRiskLevel = targetTotalPatients === 0 ? 'Thấp' : riskMeta.level;
+        const currentRiskStyle = targetTotalPatients === 0 ? 'bg-emerald-100 text-emerald-700' : riskMeta.style;
+        const currentBarColor = targetTotalPatients === 0 ? 'bg-emerald-500' : riskMeta.barColor;
+        const currentPerfColor = targetTotalPatients === 0 ? 'text-emerald-700' : riskMeta.perfColor;
+
+        // Add to aggregate numerical sum
+        sumPatients += pPatients;
+        // sumOverload is already set to overloadCount if dept is all or fixed per dept logic
+        if (currentDept !== 'all') sumOverload = pOverload;
+
+        sumDocs += pDocs;
+        sumMissing += pMissing;
+
+        // Render Row
+        tbodyHtml += `
+            <tr class="hover:bg-slate-50/50 transition-colors cursor-pointer ${index % 2 !== 0 ? 'bg-surface-container-low/20' : ''}">
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded ${d.iconBg} flex items-center justify-center ${d.iconColor}">
+                      <span class="material-symbols-outlined text-sm">${d.icon}</span>
+                  </div>
+                  <span class="font-bold text-on-surface">${d.name}</span>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-center font-mono font-medium">${pPatients.toLocaleString('vi-VN')}</td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div class="h-full ${currentBarColor}" style="width: ${Math.min(100, pPerf)}%"></div>
+                  </div><span class="text-xs font-bold ${currentPerfColor}">${pPerf}%</span>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-center font-medium">${pDocs.toString().padStart(2, '0')} BS</td>
+              <td class="px-6 py-4"><span class="px-3 py-1 ${currentRiskStyle} rounded-full text-[11px] font-bold">${currentRiskLevel}</span></td>
+              <td class="px-6 py-4 text-right"><button class="p-2 hover:bg-slate-100 rounded-full transition-colors"><span class="material-symbols-outlined text-slate-400">chevron_right</span></button></td>
+            </tr>
+          `;
+      });
+
+      // Update the Dashboard Table
+      document.getElementById('table-body').innerHTML = tbodyHtml;
+
+      // Animate KPI Numbers with the exact verified sums!
+      animateValue(document.getElementById('kpi-patients-val'), 0, sumPatients, 600);
+      animateValue(document.getElementById('kpi-overload-val'), 0, sumOverload, 600);
+      animateValue(document.getElementById('kpi-doctors-val'), 0, sumDocs, 600);
+      animateValue(document.getElementById('kpi-missing-val'), 0, sumMissing, 600);
+
+      // Smart KPI Sub-animations
+      const totalBasePatients = currentDept === 'all' ? allData.basePatients : shiftDataCopy.basePatients;
+      document.getElementById('kpi-patients-bar').style.width = Math.min(100, Math.max(30, (sumPatients / totalBasePatients) * 75)) + '%';
+
+      const missingPercentage = Math.min(100, (sumMissing / 10) * 100);
+      let missingBarsHtml = '';
+      for (let i = 0; i < 3; i++) {
+        if ((i + 1) * 33 <= missingPercentage) missingBarsHtml += '<div class="w-full h-1 bg-teal-500 rounded-full"></div>';
+        else missingBarsHtml += '<div class="w-full h-1 bg-slate-200 rounded-full"></div>';
+      }
+      document.getElementById('kpi-missing-bar').innerHTML = missingBarsHtml;
+
+      const updateShiftRiskUI = (shiftId, riskLevel, perfText) => {
+        const elStatus = document.getElementById(`shift-${shiftId}-status`);
+        const elPerf = document.getElementById(`shift-${shiftId}-perf`);
+        const block = document.getElementById(`shift-${shiftId}`);
+
+        if (!elStatus || !elPerf || !block) return;
+
+        elStatus.innerText = `Rủi ro: ${riskLevel}`;
+        elPerf.innerText = perfText;
+
+        block.className = block.className.replace(/border-(secondary|tertiary|error)/, "");
+        elStatus.className = elStatus.className.replace(/bg-(secondary-container|tertiary-fixed|error-container|tertiary-container)/g, "");
+        elStatus.className = elStatus.className.replace(/text-on-(secondary-container|tertiary-fixed-variant|error-container|tertiary-container)/g, "");
+        elPerf.className = elPerf.className.replace(/text-(slate-400|red-600|orange-500)/, "");
+
+        if (riskLevel === 'Thấp') {
+          block.classList.add('border-secondary');
+          elStatus.classList.add('bg-secondary-container', 'text-on-secondary-container');
+          elPerf.classList.add('text-slate-400');
+        } else if (riskLevel === 'Trung bình') {
+          block.classList.add('border-tertiary');
+          elStatus.classList.add('bg-tertiary-fixed', 'text-on-tertiary-fixed-variant');
+          elPerf.classList.add('text-orange-500');
+        } else {
+          block.classList.add('border-error');
+          elStatus.classList.add('bg-error-container', 'text-on-error-container');
+          elPerf.classList.add('text-red-600');
+        }
+      };
+
+      updateShiftRiskUI('morning', shiftDataCopy.morningRisk, shiftDataCopy.morningPerf);
+      updateShiftRiskUI('afternoon', shiftDataCopy.afternoonRisk, shiftDataCopy.afternoonPref);
+
+      // Update Descriptions
+      document.getElementById('shift-morning-desc').innerText = shiftDataCopy.morningDesc;
+      document.getElementById('shift-afternoon-desc').innerText = shiftDataCopy.afternoonDesc;
+
+      // Update Timestamp
+      const now = new Date();
+      document.getElementById('footer-update-time').innerText = `Cập nhật lần cuối: ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+    }
+
+    datePicker.addEventListener('change', (e) => {
+      if (e.target.value) {
+        currentDate = new Date(e.target.value);
+        const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+        let formatted = currentDate.toLocaleDateString('vi-VN', options);
+        // Clean up format to match "Thứ Tư, 1 Tháng 4, 2026"
+        formatted = formatted.replace('tháng', 'Tháng');
+        // V8 sometimes outputs lowercase "thứ tư", capitalize it:
+        formatted = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+
+        dateDisplay.innerText = formatted;
+        showToast(`Đã tải dữ liệu cho ngày: ${formatted}`);
+        updateDashboardData();
+      }
+    });
+
+    document.getElementById('date-header-trigger').addEventListener('click', () => {
+      try {
+        datePicker.showPicker();
+      } catch (error) {
+        datePicker.focus();
+      }
+    });
+
+    // 2. Filter Buttons logic
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => {
+          b.classList.remove('bg-primary', 'shadow-sm', 'text-white');
+          b.classList.add('text-on-surface-variant', 'hover:bg-white/50');
+        });
+        btn.classList.add('bg-primary', 'shadow-sm', 'text-white');
+        btn.classList.remove('text-on-surface-variant', 'hover:bg-white/50');
+
+        currentDept = btn.getAttribute('data-dept');
+        showToast(`Đang lọc dữ liệu cho: ${btn.innerText}`);
+        updateDashboardData();
+      });
+    });
+
+    // Initialize with current values
+    setTimeout(() => {
+      datePicker.valueAsDate = currentDate;
+      const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+      let formatted = currentDate.toLocaleDateString('vi-VN', options);
+      formatted = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+      dateDisplay.innerText = formatted.replace('tháng', 'Tháng');
+      fetchSheetData();
+    }, 100);
+
+    // Auto refresh every 30 seconds
+    setInterval(fetchSheetData, 30000);
+
+    // 3. Action simulation
+    document.getElementById('export-pdf-btn')?.addEventListener('click', () => {
+      showToast('Đang tạo báo cáo PDF... Vui lòng chờ.');
+    });
+
+    document.getElementById('new-shift-btn')?.addEventListener('click', () => {
+      showToast('Đang mở form tạo ca trực mới.');
+    });
+
+    // 4. Shift Redirection
+    document.querySelectorAll('[id^=shift-]').forEach(item => {
+      if (item.id.includes('desc') || item.id.includes('status') || item.id.includes('perf')) return;
+      item.addEventListener('click', () => {
+        window.location.href = 'shifts.html';
+      });
+    });
+    document.querySelectorAll('tbody tr').forEach(row => {
+      row.addEventListener('click', () => {
+        window.location.href = 'shifts.html';
+      });
+    });
+
+    // 5. Sidebar interaction
+    document.querySelectorAll('nav a').forEach(link => {
+      if (link.getAttribute('href') === '#') {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          showToast('Tính năng này sắp được ra mắt.');
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html class="light" lang="vi">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Báo cáo Phân tích - Hospital Dashboard</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap"
+    rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet">
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-surface-variant": "#424752",
+            "on-surface": "#191c1d",
+            "primary": "#00408b",
+            "surface": "#f8f9fa",
+          },
+          fontFamily: {
+            "headline": ["Manrope"],
+            "body": ["Inter"],
+          },
+          borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+        },
+      },
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8f9fa;
+      color: #191c1d;
+    }
+    .font-manrope { font-family: 'Manrope', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+  </style>
+</head>
+
+<body class="flex min-h-screen">
+  <!-- SideNavBar -->
+  <aside class="fixed left-0 top-0 h-full flex flex-col p-6 gap-6 bg-[#f8fbff] w-64 border-r border-slate-100 z-50">
+    <div class="flex items-center gap-3 mb-8 px-4 mb-4">
+      <div>
+        <h2 class="font-manrope font-bold text-[#4c72d3] text-lg leading-tight">Hanoi Medical University Hospital</h2>
+        <p class="text-[10px] uppercase tracking-widest text-slate-500 font-extrabold mt-1">SHIFT MANAGEMENT</p>
+      </div>
+    </div>
+    <nav class="flex-1 flex flex-col gap-1 overflow-y-auto no-scrollbar">
+      <a class="nav-item flex items-center gap-4 text-slate-500 px-4 py-3 font-inter text-sm font-semibold hover:bg-blue-50/50 rounded-xl transition-all" href="index.html">
+        <span class="material-symbols-outlined text-[22px]">grid_view</span><span>Dashboard</span>
+      </a>
+      <a class="flex items-center gap-4 text-slate-500 px-4 py-3 font-inter text-sm font-semibold hover:bg-blue-50/50 rounded-xl transition-all" href="shifts.html">
+        <span class="material-symbols-outlined text-[22px]">schedule</span><span>Shifts</span>
+      </a>
+      <a class="flex items-center gap-4 text-slate-500 px-4 py-3 font-inter text-sm font-semibold hover:bg-blue-50/50 rounded-xl transition-all" href="staff.html">
+        <span class="material-symbols-outlined text-[22px]">group</span><span>Staff</span>
+      </a>
+      <a class="flex items-center gap-4 bg-[#f0f4ff] text-[#4c72d3] rounded-xl px-4 py-3 font-inter text-sm font-bold transition-all" href="reports.html">
+        <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1, 'wght' 500;">bar_chart</span><span>Reports</span>
+      </a>
+    </nav>
+    <div class="mt-auto space-y-6">
+      <button class="w-full bg-[#0057B7] text-white py-3.5 px-4 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-blue-700 transition-all shadow-md shadow-blue-200">
+        <span class="material-symbols-outlined text-lg">add</span><span class="text-sm">New Shift</span>
+      </button>
+      <div class="pt-4 space-y-1">
+        <a class="flex items-center gap-4 text-slate-500 px-4 py-2 font-inter text-sm font-semibold hover:text-primary transition-all" href="#"><span class="material-symbols-outlined text-[22px]">settings</span><span>Settings</span></a>
+        <a class="flex items-center gap-4 text-slate-500 px-4 py-2 font-inter text-sm font-semibold hover:text-primary transition-all" href="#"><span class="material-symbols-outlined text-[22px]">help_outline</span><span>Help</span></a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Canvas -->
+  <main class="flex-1 ml-64 min-h-screen bg-surface flex flex-col">
+    <!-- TopNavBar -->
+    <header class="sticky top-0 z-40 bg-white flex justify-between items-center w-full px-8 py-4 border-b border-slate-100">
+      <div class="flex items-center gap-4">
+        <h1 class="font-manrope font-bold text-lg text-blue-800">Báo cáo Phân tích Thông minh</h1>
+      </div>
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-3 pl-6 border-l border-slate-100">
+          <div class="text-right">
+            <p class="text-sm font-bold text-on-surface">BS. Nguyễn Văn A</p>
+            <p class="text-[10px] text-slate-500 uppercase font-bold">Quản trị hệ thống</p>
+          </div>
+          <img alt="User" class="w-10 h-10 rounded-full border-2 border-white shadow-sm object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZWyz6cmw3ERaKYx5D0WnWRTaJGMV36jyb1OsgqPK96JkYTGMrNeR6R3789oYpQMDsTYGhMs95A4CEIdY7wvhZDcT0Uzz3ZnQngZILkMtjs0UDNz2Nmb9Lo_zhFlATCelCAwQpFmbQvxqgGm1zcRoBY5sTdxtNlBb5J8rIydJRnRzNhSr5-Wj74ZEUs3S5WlVAP2mrh9p0bK2iM00koLpj_JCTyzNe6sDWBkB9qSnqSV46D7Uyi_RiVsif8GPPnJBp2zSun_3Bvg60">
+        </div>
+      </div>
+    </header>
+
+    <!-- Content Area -->
+    <div class="flex-1 p-0 flex flex-col overflow-hidden">
+      <div class="p-6 bg-white border-b border-slate-100 flex justify-between items-center">
+        <div>
+          <h2 class="font-manrope text-2xl font-extrabold text-on-surface tracking-tight">Power BI Service - Hospital Dashboard</h2>
+          <p class="text-on-surface-variant font-medium text-sm">Dữ liệu phân tích chuyên sâu toàn viện.</p>
+        </div>
+        <div class="flex gap-3">
+          <button onclick="window.location.reload()" class="flex items-center gap-2 px-4 py-2 bg-surface-container-low rounded-lg text-sm font-bold text-on-surface hover:bg-slate-200 transition-all">
+            <span class="material-symbols-outlined text-sm">refresh</span>Làm mới
+          </button>
+        </div>
+      </div>
+      
+      <!-- Power BI Container -->
+      <div class="flex-1 w-full bg-slate-50 overflow-hidden relative">
+        <iframe title="Hospital" class="absolute inset-0 w-full h-full border-0" src="https://app.powerbi.com/view?r=eyJrIjoiMjZkNjg5OTgtZGYyMC00NDczLTkyMzEtYjkxOGE4N2FlNjhjIiwidCI6ImUwMzFiOWNlLWZjYjctNGFiNC1hMTgxLTYzNWQ2ZGI1M2Y3ZiIsImMiOjEwfQ%3D%3D" allowFullScreen="true"></iframe>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

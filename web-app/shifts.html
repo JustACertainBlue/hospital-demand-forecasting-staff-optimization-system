@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html class="light" lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Công cụ Tối ưu Điều phối Bệnh viện - Quản lý Ca trực</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-primary-fixed-variant": "#004492",
+                        "on-surface-variant": "#424752",
+                        "on-surface": "#191c1d",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-container": "#ffc3c1",
+                        "surface-dim": "#d9dadb",
+                        "secondary-container": "#90efef",
+                        "on-background": "#191c1d",
+                        "background": "#f8f9fa",
+                        "surface-container": "#edeeef",
+                        "surface-bright": "#f8f9fa",
+                        "secondary-fixed": "#93f2f2",
+                        "inverse-on-surface": "#f0f1f2",
+                        "surface-container-low": "#f3f4f5",
+                        "primary-fixed-dim": "#acc7ff",
+                        "tertiary-container": "#9a3a3c",
+                        "on-secondary-fixed": "#002020",
+                        "on-primary-fixed": "#001a40",
+                        "on-error": "#ffffff",
+                        "inverse-primary": "#acc7ff",
+                        "on-secondary-container": "#006e6e",
+                        "primary-container": "#0057b7",
+                        "surface-container-high": "#e7e8e9",
+                        "on-primary-container": "#bed2ff",
+                        "secondary-fixed-dim": "#76d6d5",
+                        "on-tertiary-fixed-variant": "#80272b",
+                        "on-secondary-fixed-variant": "#004f4f",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e1e3e4",
+                        "error": "#ba1a1a",
+                        "outline": "#727784",
+                        "on-tertiary": "#ffffff",
+                        "surface": "#f8f9fa",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed": "#d7e2ff",
+                        "tertiary-fixed": "#ffdad8",
+                        "tertiary": "#7b2327",
+                        "primary": "#00408b",
+                        "surface-tint": "#0e5bbb",
+                        "secondary": "#006a6a",
+                        "on-tertiary-fixed": "#410007",
+                        "surface-variant": "#e1e3e4",
+                        "outline-variant": "#c2c6d4",
+                        "tertiary-fixed-dim": "#ffb3b1",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#2e3132"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #191c1d;
+        }
+
+        .font-manrope {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .animate-in {
+            animation: slideIn 0.3s ease-out forwards;
+        }
+
+        .active-cell {
+            outline: 2px solid #0057B7 !important;
+            outline-offset: -2px;
+            background-color: rgba(0, 87, 183, 0.08) !important;
+            box-shadow: inset 0 0 0 1px #0057B7;
+        }
+
+        .shift-cell {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .shift-cell:hover:not(.active-cell) {
+            background-color: #f1f5f9;
+        }
+
+        /* Collapsible Sidebar Styles */
+        #sidebar {
+            transition: width 0.3s ease, padding 0.3s ease;
+        }
+
+        #main-content {
+            transition: margin-left 0.3s ease;
+        }
+
+        body.sidebar-collapsed #sidebar {
+            width: 5rem !important;
+            /* w-20 */
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+        }
+
+        body.sidebar-collapsed #main-content {
+            margin-left: 5rem !important;
+            /* ml-20 */
+        }
+
+        body.sidebar-collapsed .nav-text {
+            display: none !important;
+        }
+
+        body.sidebar-collapsed .logo-details {
+            display: none !important;
+        }
+
+        body.sidebar-collapsed #new-shift-btn {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            aspect-ratio: 1;
+            justify-content: center;
+            border-radius: 9999px;
+        }
+
+        body.sidebar-collapsed .nav-item {
+            justify-content: center !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
+        body.sidebar-collapsed #sidebar-toggle {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+
+<body class="flex min-h-screen">
+    <!-- SideNavBar -->
+    <aside id="sidebar"
+        class="fixed left-0 top-0 h-full flex flex-col p-6 gap-6 bg-[#f8fbff] w-64 border-r border-slate-100 z-50">
+        <button id="sidebar-toggle"
+            class="absolute -right-3 top-8 w-6 h-6 flex items-center justify-center bg-white border border-slate-200 rounded-full text-slate-500 hover:bg-slate-50 shadow-sm transition-transform duration-300 z-50">
+            <span class="material-symbols-outlined text-[14px]">chevron_left</span>
+        </button>
+        <div class="flex items-center gap-3 mb-8 px-4 h-10 overflow-hidden shrink-0">
+            <div class="logo-details min-w-[150px]">
+                <h2 class="font-manrope font-bold text-[#4c72d3] text-lg leading-tight">Hanoi Medical</h2>
+                <p class="text-[10px] uppercase tracking-widest text-slate-500 font-extrabold mt-1">SHIFT MANAGEMENT</p>
+            </div>
+        </div>
+        <nav class="flex-1 flex flex-col gap-1 overflow-x-hidden no-scrollbar">
+            <a class="nav-item flex items-center gap-4 text-slate-500 px-4 py-3 font-inter text-sm font-semibold hover:bg-blue-50/50 rounded-xl transition-all"
+                href="index.html"><span class="material-symbols-outlined text-[22px] shrink-0">grid_view</span><span
+                    class="nav-text whitespace-nowrap">Dashboard</span></a>
+            <a class="nav-item flex items-center gap-4 bg-[#f0f4ff] text-[#4c72d3] rounded-xl px-4 py-3 font-inter text-sm font-bold transition-all"
+                href="shifts.html"><span class="material-symbols-outlined text-[22px] shrink-0"
+                    style="font-variation-settings: 'FILL' 0, 'wght' 500;">schedule</span><span
+                    class="nav-text whitespace-nowrap">Shifts</span></a>
+            <a class="nav-item flex items-center gap-4 text-slate-500 px-4 py-3 font-inter text-sm font-semibold hover:bg-blue-50/50 rounded-xl transition-all"
+                href="staff.html"><span class="material-symbols-outlined text-[22px] shrink-0">group</span><span
+                    class="nav-text whitespace-nowrap">Staff</span></a>
+            <a class="nav-item flex items-center gap-4 text-slate-500 px-4 py-3 font-inter text-sm font-semibold hover:bg-blue-50/50 rounded-xl transition-all"
+                href="reports.html"><span class="material-symbols-outlined text-[22px] shrink-0">bar_chart</span><span
+                    class="nav-text whitespace-nowrap">Reports</span></a>
+        </nav>
+        <div class="mt-auto space-y-6 overflow-x-hidden">
+            <button id="new-shift-btn"
+                class="w-full bg-[#0057B7] text-white py-3.5 px-4 rounded-full font-bold flex items-center gap-2 hover:bg-blue-700 transition-all shadow-md shadow-blue-200 shrink-0"><span
+                    class="material-symbols-outlined text-lg">add</span><span
+                    class="nav-text text-sm whitespace-nowrap">New Shift</span></button>
+            <div class="pt-4 space-y-1">
+                <a class="nav-item flex items-center gap-4 text-slate-500 px-4 py-2 font-inter text-sm font-semibold hover:text-primary transition-all"
+                    href="#"><span class="material-symbols-outlined text-[22px] shrink-0">settings</span><span
+                        class="nav-text whitespace-nowrap">Settings</span></a>
+                <a class="nav-item flex items-center gap-4 text-slate-500 px-4 py-2 font-inter text-sm font-semibold hover:text-primary transition-all"
+                    href="#"><span class="material-symbols-outlined text-[22px] shrink-0">help_outline</span><span
+                        class="nav-text whitespace-nowrap">Help</span></a>
+            </div>
+        </div>
+    </aside>
+    <!-- Main Content -->
+    <main id="main-content" class="flex-1 ml-64 min-h-screen grid grid-cols-12 overflow-hidden">
+        <div class="col-span-12 lg:col-span-9 p-5 lg:p-6 border-r border-slate-100 flex flex-col gap-6">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h2 class="text-2xl lg:text-3xl font-headline font-extrabold text-on-surface tracking-tight">Quản lý
+                        Lịch trực - Master Schedule</h2>
+                    <p class="text-on-surface-variant body-md mt-1">Theo dõi và điều phối nhân sự toàn hệ thống</p>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div id="filter-group" class="flex items-center gap-3 bg-surface-container-low p-1.5 rounded-xl">
+                        <button data-dept="all"
+                            class="filter-btn px-4 py-2 bg-primary text-white shadow-sm rounded-lg text-sm font-bold transition-all">Toàn
+                            viện</button>
+                        <button data-dept="Nội Tổng Quát"
+                            class="filter-btn px-4 py-2 text-sm font-medium text-on-surface-variant hover:bg-white/50 rounded-lg transition-all">Khoa
+                            Nội</button>
+                        <button data-dept="Tim Mạch"
+                            class="filter-btn px-4 py-2 text-sm font-medium text-on-surface-variant hover:bg-white/50 rounded-lg transition-all">Khoa
+                            Ngoại</button>
+                        <button data-dept="Thần Kinh"
+                            class="filter-btn px-4 py-2 text-sm font-medium text-on-surface-variant hover:bg-white/50 rounded-lg transition-all">Khoa
+                            Thần Kinh</button>
+                    </div>
+                    <div
+                        class="flex items-center bg-surface-container-lowest p-1 rounded-xl shadow-sm border border-slate-100">
+                        <button id="prev-week-btn" class="p-2 hover:bg-surface-container rounded-lg"><span
+                                class="material-symbols-outlined">chevron_left</span></button>
+                        <span id="week-label" class="px-4 font-bold text-primary">Tuần 14: 01/04 - 07/04/2026</span>
+                        <button id="next-week-btn" class="p-2 hover:bg-surface-container rounded-lg"><span
+                                class="material-symbols-outlined">chevron_right</span></button>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="bg-surface-container-lowest rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex-1 flex flex-col">
+                <div class="grid grid-cols-8 border-b border-slate-100 bg-surface-container-low/50">
+                    <div
+                        class="p-4 border-r border-slate-100 font-bold text-[10px] uppercase text-on-surface-variant tracking-widest flex items-center justify-center">
+                        KHOA / CA</div>
+                    <div class="p-4 border-r border-slate-100 flex flex-col items-center">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase">T2</span>
+                        <span class="text-sm font-extrabold text-primary">30/03</span>
+                    </div>
+                    <div class="p-4 border-r border-slate-100 flex flex-col items-center"><span
+                            class="text-[10px] font-bold text-slate-400 uppercase">T3</span><span
+                            class="text-sm font-extrabold text-primary">31/03</span></div>
+                    <div class="p-4 border-r border-slate-100 flex flex-col items-center"><span
+                            class="text-[10px] font-bold text-slate-400 uppercase">T4</span><span
+                            class="text-sm font-extrabold text-primary">01/04</span></div>
+                    <div class="p-4 border-r border-slate-100 flex flex-col items-center"><span
+                            class="text-[10px] font-bold text-slate-400 uppercase">T5</span><span
+                            class="text-sm font-extrabold text-primary">02/04</span></div>
+                    <div class="p-4 border-r border-slate-100 flex flex-col items-center"><span
+                            class="text-[10px] font-bold text-slate-400 uppercase">T6</span><span
+                            class="text-sm font-extrabold text-primary">03/04</span></div>
+                    <div class="p-4 border-r border-slate-100 flex flex-col items-center bg-transparent"><span
+                            class="text-[10px] font-bold text-slate-400 uppercase">T7</span><span
+                            class="text-sm font-extrabold text-primary">04/04</span></div>
+                    <div class="p-4 flex flex-col items-center bg-transparent"><span
+                            class="text-[10px] font-bold text-slate-400 uppercase">CN</span><span
+                            class="text-sm font-extrabold text-primary">05/04</span></div>
+                </div>
+                <div class="flex-1 overflow-y-auto">
+                    <!-- Nội Tổng Quát -->
+                    <div class="dept-row grid grid-cols-12 border-b border-slate-100" data-dept="Nội Tổng Quát">
+                        <div class="col-span-12">
+                            <!-- Row Sáng -->
+                            <div class="grid grid-cols-8 border-b border-slate-100/50">
+                                <div class="p-4 border-r border-slate-100 flex flex-col justify-center bg-slate-50/10">
+                                    <p class="text-sm font-extrabold text-primary leading-tight">Nội Tổng Quát</p>
+                                    <p class="text-[9px] text-slate-400 font-bold uppercase mt-1">Sáng</p>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Nội Tổng Quát" data-day="T2" data-date="30/03" data-shift="Sáng"
+                                    data-quota="4">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">4/4 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Nội Tổng Quát" data-day="T3" data-date="31/03" data-shift="Sáng"
+                                    data-quota="4">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">4/4 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center bg-secondary-container/10 shift-cell active-cell"
+                                    data-dept="Nội Tổng Quát" data-day="T4" data-date="01/04" data-shift="Sáng"
+                                    data-quota="4">
+                                    <span class="text-[11px] font-bold text-secondary cell-count">4/4 BS</span>
+                                    <span class="text-[8px] font-medium text-secondary/70 uppercase">Optimal</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center bg-error-container/10 shift-cell"
+                                    data-dept="Nội Tổng Quát" data-day="T5" data-date="02/04" data-shift="Sáng"
+                                    data-quota="4">
+                                    <span class="text-[11px] font-bold text-error cell-count">2/4 BS</span>
+                                    <span class="text-[8px] font-bold text-error/70 uppercase">CRITICAL</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Nội Tổng Quát" data-day="T6" data-date="03/04" data-shift="Sáng"
+                                    data-quota="4">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">4/4 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Nội Tổng Quát" data-day="T7" data-date="04/04" data-shift="Sáng"
+                                    data-quota="4">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">4/4 BS</span>
+                                </div>
+                                <div class="p-2 flex flex-col items-center justify-center bg-error-container/10 shift-cell"
+                                    data-dept="Nội Tổng Quát" data-day="CN" data-date="05/04" data-shift="Sáng"
+                                    data-quota="4">
+                                    <span class="text-[11px] font-bold text-error cell-count">2/4 BS</span>
+                                    <span class="text-[8px] font-bold text-error/70 uppercase">Shortage</span>
+                                </div>
+                            </div>
+                            <!-- Row Chiều -->
+                            <div class="grid grid-cols-8">
+                                <div class="p-4 border-r border-slate-100 flex flex-col justify-center bg-slate-50/10">
+                                    <p class="text-[9px] text-slate-400 font-bold uppercase">Chiều</p>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Nội Tổng Quát" data-day="T2" data-date="30/03" data-shift="Chiều"
+                                    data-quota="4">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">4/4 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Nội Tổng Quát" data-day="T3" data-date="31/03" data-shift="Chiều"
+                                    data-quota="4">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">4/4 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center bg-primary-fixed/20 shift-cell"
+                                    data-dept="Nội Tổng Quát" data-day="T4" data-date="01/04" data-shift="Chiều"
+                                    data-quota="4">
+                                    <span class="text-[11px] font-bold text-primary cell-count">5/4 BS</span>
+                                    <span class="text-[8px] font-medium text-primary/70 uppercase">Dư 1</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center bg-secondary-container/10 shift-cell"
+                                    data-dept="Nội Tổng Quát" data-day="T5" data-date="02/04" data-shift="Chiều"
+                                    data-quota="4">
+                                    <span class="text-[11px] font-bold text-secondary cell-count">4/4 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Nội Tổng Quát" data-day="T6" data-date="03/04" data-shift="Chiều"
+                                    data-quota="4">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">4/4 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Nội Tổng Quát" data-day="T7" data-date="04/04" data-shift="Chiều"
+                                    data-quota="4">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">4/4 BS</span>
+                                </div>
+                                <div class="p-2 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Nội Tổng Quát" data-day="CN" data-date="05/04" data-shift="Chiều"
+                                    data-quota="4">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">2/4 BS</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tim Mạch -->
+                    <div class="dept-row grid grid-cols-12 border-b border-slate-100" data-dept="Tim Mạch">
+                        <div class="col-span-12">
+                            <div class="grid grid-cols-8 border-b border-slate-100/50">
+                                <div class="p-4 border-r border-slate-100 flex flex-col justify-center bg-slate-50/10">
+                                    <p class="text-sm font-extrabold text-primary leading-tight">Tim Mạch</p>
+                                    <p class="text-[9px] text-slate-400 font-bold uppercase mt-1">Sáng</p>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Tim Mạch" data-day="T2" data-date="30/03" data-shift="Sáng"
+                                    data-quota="3">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">3/3 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Tim Mạch" data-day="T3" data-date="31/03" data-shift="Sáng"
+                                    data-quota="3">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">3/3 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center bg-secondary-container/10 shift-cell"
+                                    data-dept="Tim Mạch" data-day="T4" data-date="01/04" data-shift="Sáng"
+                                    data-quota="3">
+                                    <span class="text-[11px] font-bold text-secondary cell-count">3/3 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Tim Mạch" data-day="T5" data-date="02/04" data-shift="Sáng"
+                                    data-quota="3">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">3/3 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Tim Mạch" data-day="T6" data-date="03/04" data-shift="Sáng"
+                                    data-quota="3">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">3/3 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Tim Mạch" data-day="T7" data-date="04/04" data-shift="Sáng"
+                                    data-quota="3">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">3/3 BS</span>
+                                </div>
+                                <div class="p-2 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Tim Mạch" data-day="CN" data-date="05/04" data-shift="Sáng"
+                                    data-quota="3">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">2/3 BS</span>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-8">
+                                <div class="p-4 border-r border-slate-100 flex flex-col justify-center bg-slate-50/10">
+                                    <p class="text-[9px] text-slate-400 font-bold uppercase">Chiều</p>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Tim Mạch" data-day="T2" data-date="30/03" data-shift="Chiều"
+                                    data-quota="3">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">3/3 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Tim Mạch" data-day="T3" data-date="31/03" data-shift="Chiều"
+                                    data-quota="3">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">3/3 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Tim Mạch" data-day="T4" data-date="01/04" data-shift="Chiều"
+                                    data-quota="3">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">3/3 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Tim Mạch" data-day="T5" data-date="02/04" data-shift="Chiều"
+                                    data-quota="3">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">3/3 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center bg-primary-fixed/20 shift-cell"
+                                    data-dept="Tim Mạch" data-day="T6" data-date="03/04" data-shift="Chiều"
+                                    data-quota="3">
+                                    <span class="text-[11px] font-bold text-primary cell-count">4/3 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Tim Mạch" data-day="T7" data-date="04/04" data-shift="Chiều"
+                                    data-quota="3">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">3/3 BS</span>
+                                </div>
+                                <div class="p-2 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Tim Mạch" data-day="CN" data-date="05/04" data-shift="Chiều"
+                                    data-quota="3">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">2/3 BS</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thần Kinh -->
+                    <div class="dept-row grid grid-cols-12" data-dept="Thần Kinh">
+                        <div class="col-span-12">
+                            <div class="grid grid-cols-8 border-b border-slate-100/50">
+                                <div class="p-4 border-r border-slate-100 flex flex-col justify-center bg-slate-50/10">
+                                    <p class="text-sm font-extrabold text-primary leading-tight">Thần Kinh</p>
+                                    <p class="text-[9px] text-slate-400 font-bold uppercase mt-1">Sáng</p>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Thần Kinh" data-day="T2" data-date="30/03" data-shift="Sáng"
+                                    data-quota="2">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">2/2 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Thần Kinh" data-day="T3" data-date="31/03" data-shift="Sáng"
+                                    data-quota="2">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">2/2 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Thần Kinh" data-day="T4" data-date="01/04" data-shift="Sáng"
+                                    data-quota="2">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">2/2 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Thần Kinh" data-day="T5" data-date="02/04" data-shift="Sáng"
+                                    data-quota="2">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">2/2 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center bg-error-container/10 shift-cell"
+                                    data-dept="Thần Kinh" data-day="T6" data-date="03/04" data-shift="Sáng"
+                                    data-quota="2">
+                                    <span class="text-[11px] font-bold text-error cell-count">1/2 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Thần Kinh" data-day="T7" data-date="04/04" data-shift="Sáng"
+                                    data-quota="2">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">2/2 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Thần Kinh" data-day="CN" data-date="05/04" data-shift="Sáng"
+                                    data-quota="2">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">2/2 BS</span>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-8">
+                                <div class="p-4 border-r border-slate-100 flex flex-col justify-center bg-slate-50/10">
+                                    <p class="text-[9px] text-slate-400 font-bold uppercase">Chiều</p>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Thần Kinh" data-day="T2" data-date="30/03" data-shift="Chiều"
+                                    data-quota="2">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">2/2 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Thần Kinh" data-day="T3" data-date="31/03" data-shift="Chiều"
+                                    data-quota="2">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">2/2 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Thần Kinh" data-day="T4" data-date="01/04" data-shift="Chiều"
+                                    data-quota="2">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">2/2 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Thần Kinh" data-day="T5" data-date="02/04" data-shift="Chiều"
+                                    data-quota="2">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">2/2 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Thần Kinh" data-day="T6" data-date="03/04" data-shift="Chiều"
+                                    data-quota="2">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">2/2 BS</span>
+                                </div>
+                                <div class="p-2 border-r border-slate-100 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Thần Kinh" data-day="T7" data-date="04/04" data-shift="Chiều"
+                                    data-quota="2">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">2/2 BS</span>
+                                </div>
+                                <div class="p-2 flex flex-col items-center justify-center shift-cell"
+                                    data-dept="Thần Kinh" data-day="CN" data-date="05/04" data-shift="Chiều"
+                                    data-quota="2">
+                                    <span class="text-[11px] font-bold text-on-surface cell-count">2/2 BS</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-span-12 lg:col-span-3 p-5 lg:p-6 pl-0 lg:pl-6">
+            <div
+                class="bg-surface-container-lowest rounded-xl shadow-sm border border-slate-100 flex flex-col h-full sticky top-6 max-h-[calc(100vh-3rem)]">
+                <div class="p-6 border-b border-slate-100">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 id="detail-title" class="font-headline font-extrabold text-on-surface text-lg">Chi tiết phân
+                            bổ</h3>
+                        <span id="detail-date"
+                            class="px-2 py-0.5 bg-blue-100 text-primary text-[10px] font-bold rounded-full">T2 -
+                            01/04</span>
+                    </div>
+                    <p class="text-xs text-on-surface-variant">Khoa: <span id="detail-dept"
+                            class="font-bold text-primary">Nội Tổng Quát</span> • Ca: <span id="detail-shift"
+                            class="font-bold text-primary">Sáng</span></p>
+                </div>
+                <div class="flex-1 overflow-y-auto p-6 space-y-8">
+                    <section>
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Nhân sự đang
+                                được phân bổ</h4>
+                            <span id="assigned-count"
+                                class="text-[10px] bg-secondary-container/30 text-secondary px-2 py-0.5 rounded-full font-bold">02/04</span>
+                        </div>
+                        <div id="assigned-list" class="space-y-4"></div>
+                    </section>
+                    <section>
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Nhân sự có
+                                thể phân vào</h4>
+                            <span
+                                class="text-[10px] bg-primary-fixed text-on-primary-fixed-variant px-2 py-0.5 rounded-full font-bold">Sẵn
+                                sàng</span>
+                        </div>
+                        <div id="available-list" class="space-y-4"></div>
+                    </section>
+                </div>
+                <div class="p-6 bg-slate-50 border-t border-slate-100 rounded-b-2xl">
+                    <button id="save-changes-btn"
+                        class="w-full py-3 bg-white border border-primary text-primary font-bold rounded-xl hover:bg-primary hover:text-white transition-all shadow-sm flex items-center justify-center gap-2">
+                        Lưu thay đổi phân bổ <span class="material-symbols-outlined text-sm">save</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="toast"
+        class="fixed bottom-8 right-8 bg-blue-800 text-white px-6 py-4 rounded-2xl shadow-2xl transform translate-y-24 opacity-0 transition-all duration-300 z-50 flex items-center gap-3">
+        <span class="material-symbols-outlined">info</span>
+        <span id="toast-message">Thông báo hệ thống</span>
+    </div>
+
+    <script>
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbykTtGKvJ-wvhajzafaW8XrY-khp1kqSFY3Qbl6SuN2mj_OQitrqRbVXDAZjfsJfVu32g/exec';
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/1fk0e05GIeKqRnCfs8XplwkpNKcctWoUFcfYfIbTFFPQ/export?format=csv&gid=1867757610';
+
+        let currentWeek = 14;
+
+        // Detailed local state for each shift cell
+        const cellsState = {};
+        let selectedCell = null;
+
+        // Centralized Staff Data using Sprite Sheets (Synced with staff.html)
+        const getSpriteStyle = (gender, index) => {
+            const col = index % 4;
+            const row = Math.floor(index / 4);
+            const posX = col * 33.3333;
+            const posY = row === 0 ? 12 : 75;
+            const file = gender === 'M' ? 'staff-men-sprite.png' : 'staff-women-sprite.png';
+            return `background-image: url('${file}'); background-size: 400% auto; background-position: ${posX}% ${posY}%; background-repeat: no-repeat;`;
+        };
+
+        const getStatusStyleInfo = (status) => {
+            switch (status) {
+                case 'Sẵn sàng': return { text: 'Sẵn sàng', color: 'bg-emerald-500' };
+                case 'Đang trực': return { text: 'Đang trực', color: 'bg-blue-500' };
+                case 'Đang điều phối': return { text: 'Đang điều phối', color: 'bg-indigo-500' };
+                case 'Nghỉ phép': return { text: 'Nghỉ phép', color: 'bg-slate-400' };
+                case 'Bận': return { text: 'Bận', color: 'bg-red-500' };
+                default: return { text: 'Khác', color: 'bg-slate-300' };
+            }
+        };
+
+        const allStaff = [
+            { id: 1, name: 'BS. Lê Nam Hải', gender: 'M', spriteIndex: 0, role: 'Bác sĩ trực', status: 'Đang trực' },
+            { id: 2, name: 'BS. Trần Kim Oanh', gender: 'F', spriteIndex: 3, role: 'Chuyên khoa', status: 'Sẵn sàng' },
+            { id: 3, name: 'BS. Nguyễn Văn Tùng', gender: 'M', spriteIndex: 1, role: 'Bác sĩ trực', status: 'Đang trực' },
+            { id: 4, name: 'BS. Phạm Hoàng Long', gender: 'M', spriteIndex: 4, role: 'Trưởng ca', status: 'Nghỉ phép' },
+            { id: 5, name: 'BS. Vũ Thùy Linh', gender: 'F', spriteIndex: 0, role: 'Chuyên khoa', status: 'Sẵn sàng' },
+            { id: 6, name: 'BS. Lê Ánh Nguyệt', gender: 'F', spriteIndex: 4, role: 'Bác sĩ trực', status: 'Bận' },
+            { id: 7, name: 'BS. Đặng Việt Cường', gender: 'M', spriteIndex: 2, role: 'Bác sĩ trực', status: 'Đang trực' },
+            { id: 8, name: 'BS. Mai Phương Chi', gender: 'F', spriteIndex: 5, role: 'Chuyên khoa', status: 'Sẵn sàng' },
+            { id: 9, name: 'BS. Trần Hùng', gender: 'M', spriteIndex: 3, role: 'Bác sĩ trực', status: 'Đang trực' },
+            { id: 10, name: 'BS. Bùi Quang Tuấn', gender: 'M', spriteIndex: 5, role: 'Trưởng ca', status: 'Sẵn sàng' },
+            { id: 11, name: 'BS. Võ Thị Trang', gender: 'F', spriteIndex: 1, role: 'Bác sĩ trực', status: 'Nghỉ phép' },
+            { id: 12, name: 'BS. Hoàng Thanh Mai', gender: 'F', spriteIndex: 2, role: 'Bác sĩ trực', status: 'Sẵn sàng' },
+            { id: 13, name: 'BS. Phan Anh Tú', gender: 'M', spriteIndex: 6, role: 'Bác sĩ trực', status: 'Đang trực' },
+            { id: 14, name: 'BS. Lý Phương Lan', gender: 'F', spriteIndex: 6, role: 'Chuyên khoa', status: 'Đang điều phối' },
+            { id: 15, name: 'BS. Đỗ Duy Khoa', gender: 'M', spriteIndex: 7, role: 'Bác sĩ trực', status: 'Sẵn sàng' },
+            { id: 16, name: 'BS. Trịnh Hải Băng', gender: 'F', spriteIndex: 7, role: 'Trưởng ca', status: 'Bận' },
+            // Additional 14 members
+            { id: 17, name: 'BS. Hoàng Nam', gender: 'M', spriteIndex: 0, role: 'Bác sĩ chính', status: 'Sẵn sàng' },
+            { id: 18, name: 'BS. Nguyễn Thị Mai', gender: 'F', spriteIndex: 1, role: 'Bác sĩ', status: 'Sẵn sàng' },
+            { id: 19, name: 'BS. Trần Tuấn Anh', gender: 'M', spriteIndex: 4, role: 'Bác sĩ trực', status: 'Sẵn sàng' },
+            { id: 20, name: 'BS. Lê Thu Hà', gender: 'F', spriteIndex: 0, role: 'Bác sĩ', status: 'Sẵn sàng' },
+            { id: 21, name: 'BS. Phạm Minh', gender: 'M', spriteIndex: 2, role: 'Chuyên khoa', status: 'Sẵn sàng' },
+            { id: 22, name: 'BS. Vũ Hợi', gender: 'M', spriteIndex: 3, role: 'Bác sĩ', status: 'Sẵn sàng' },
+            { id: 23, name: 'BS. Đặng Thu', gender: 'F', spriteIndex: 4, role: 'Bác sĩ trực', status: 'Sẵn sàng' },
+            { id: 24, name: 'BS. Bùi Liên', gender: 'F', spriteIndex: 5, role: 'Bác sĩ', status: 'Sẵn sàng' },
+            { id: 25, name: 'BS. Chu Hải', gender: 'M', spriteIndex: 6, role: 'Bác sĩ chính', status: 'Sẵn sàng' },
+            { id: 26, name: 'BS. Ngô Vân', gender: 'F', spriteIndex: 6, role: 'Bác sĩ', status: 'Sẵn sàng' },
+            { id: 27, name: 'BS. Dương Quá', gender: 'M', spriteIndex: 7, role: 'Bác sĩ trực', status: 'Sẵn sàng' },
+            { id: 28, name: 'BS. Kim Dung', gender: 'F', spriteIndex: 7, role: 'Bác sĩ', status: 'Sẵn sàng' },
+            { id: 29, name: 'BS. Long Nữ', gender: 'F', spriteIndex: 0, role: 'Trưởng ca', status: 'Sẵn sàng' },
+            { id: 30, name: 'BS. Vô Kỵ', gender: 'M', spriteIndex: 1, role: 'Bác sĩ', status: 'Sẵn sàng' }
+        ];
+        allStaff.sort((a, b) => a.id - b.id);
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.innerText = message;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-24', 'opacity-0'), 3000);
+        }
+
+        let sheetData = [];
+
+        async function fetchSheetData() {
+            try {
+                const response = await fetch(CSV_URL);
+                const text = await response.text();
+                const rows = text.split('\n').map(row => row.split(','));
+                const headers = rows[0];
+                sheetData = rows.slice(1).map(row => {
+                    let obj = {};
+                    headers.forEach((header, i) => {
+                        obj[header.trim()] = row[i]?.trim();
+                    });
+                    return obj;
+                });
+
+                // Add manual backfill data for March 30-31 as requested
+                const backfill = [
+                    { date: '2026-03-30', shift: 'Morning', appointments_booked: '124', forecast_total_patients: '631', current_doctor: '14', capacity: '420', ultilization: '1.50', overload_risk_label: 'Very High', required_doctor: '21' },
+                    { date: '2026-03-30', shift: 'Afternoon', appointments_booked: '92', forecast_total_patients: '343', current_doctor: '14', capacity: '420', ultilization: '0.82', overload_risk_label: 'Medium', required_doctor: '14' },
+                    { date: '2026-03-31', shift: 'Morning', appointments_booked: '139', forecast_total_patients: '541', current_doctor: '14', capacity: '420', ultilization: '1.29', overload_risk_label: 'Very High', required_doctor: '18' },
+                    { date: '2026-03-31', shift: 'Afternoon', appointments_booked: '66', forecast_total_patients: '297', current_doctor: '14', capacity: '420', ultilization: '0.71', overload_risk_label: 'Medium', required_doctor: '14' }
+                ];
+                sheetData = [...backfill, ...sheetData];
+
+                updateShiftCountsFromSheet();
+                showToast('Dữ liệu Khoa Nội đã được cập nhật từ Google Sheet');
+            } catch (error) {
+                console.error('Error fetching sheet data:', error);
+            }
+        }
+
+        function updateShiftCountsFromSheet() {
+            document.querySelectorAll('.shift-cell[data-dept="Nội Tổng Quát"]').forEach(cell => {
+                const [d, m] = cell.dataset.date.split('/');
+                const shiftDate = `2026-${m}-${d}`;
+                const shiftName = cell.dataset.shift === 'Sáng' ? 'Morning' : 'Afternoon';
+                const forecast = sheetData.find(d => d.date === shiftDate && d.shift === shiftName);
+
+                if (forecast) {
+                    // Update quota from 'required_doctor' column
+                    const newQuota = parseInt(forecast.required_doctor) || parseInt(cell.dataset.quota);
+                    cell.dataset.quota = newQuota;
+
+                    const countSpan = cell.querySelector('.cell-count');
+                    if (countSpan) {
+                        countSpan.innerText = `${forecast.current_doctor}/${newQuota} BS`;
+                    }
+                    const cellId = getCellId(cell);
+                    const assignedCount = parseInt(forecast.current_doctor) || 0;
+                    const shuffled = [...allStaff].sort(() => 0.5 - Math.random());
+                    cellsState[cellId] = {
+                        assigned: shuffled.slice(0, assignedCount),
+                        available: shuffled.slice(assignedCount)
+                    };
+                }
+            });
+            updateAllCellsUI();
+        }
+
+        function getCellId(cell) {
+            return `${cell.dataset.dept}-${cell.dataset.day}-${cell.dataset.shift}`;
+        }
+
+        function initCellState(cell) {
+            const cellId = getCellId(cell);
+            if (!cellsState[cellId]) {
+                const countSpan = cell.querySelector('.cell-count');
+                let assignedCount = countSpan ? (parseInt(countSpan.innerText.split('/')[0]) || 0) : 2;
+                const shuffled = [...allStaff].sort(() => 0.5 - Math.random());
+                cellsState[cellId] = {
+                    assigned: shuffled.slice(0, assignedCount),
+                    available: shuffled.slice(assignedCount)
+                };
+            }
+        }
+
+        function renderLists() {
+            if (!selectedCell) return;
+            const cellId = getCellId(selectedCell);
+            const state = cellsState[cellId];
+
+            const assignedList = document.getElementById('assigned-list');
+            const availableList = document.getElementById('available-list');
+            const countLabel = document.getElementById('assigned-count');
+            const quota = parseInt(selectedCell.dataset.quota);
+
+            assignedList.innerHTML = state.assigned.map(s => {
+                const statusInfo = getStatusStyleInfo(s.status);
+                return `
+            <div class="group flex items-center gap-2 animate-in py-1">
+                <div class="relative w-8 h-8 shrink-0">
+                    <div class="w-full h-full rounded-full border border-slate-200" style="${getSpriteStyle(s.gender, s.spriteIndex)}"></div>
+                    <div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-white ${statusInfo.color}"></div>
+                </div>
+                <div class="flex-1 min-w-0 pr-1">
+                    <p class="text-[13px] leading-tight font-bold text-on-surface break-words" title="${s.status}">${s.name}</p>
+                    <p class="text-[10px] text-on-surface-variant break-words mt-0.5">${s.role}</p>
+                </div>
+                <button onclick="removeStaff(${s.id})" class="w-7 h-7 flex items-center justify-center rounded-md bg-red-50 text-error hover:bg-error hover:text-white transition-all shrink-0">
+                    <span class="material-symbols-outlined text-base">close</span>
+                </button>
+            </div>
+            `;
+            }).join('');
+
+            availableList.innerHTML = state.available.map(s => {
+                const statusInfo = getStatusStyleInfo(s.status);
+                return `
+            <div class="flex items-center gap-2 p-1.5 hover:bg-slate-50 rounded-xl transition-colors">
+                <div class="relative w-8 h-8 shrink-0">
+                    <div class="w-full h-full rounded-full border border-slate-200 grayscale opacity-60" style="${getSpriteStyle(s.gender, s.spriteIndex)}"></div>
+                    <div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-white ${statusInfo.color} grayscale opacity-60"></div>
+                </div>
+                <div class="flex-1 min-w-0 pr-1">
+                    <p class="text-[13px] leading-tight font-bold text-on-surface break-words" title="${s.status}">${s.name}</p>
+                    <p class="text-[9px] text-secondary font-bold uppercase tracking-tighter mt-0.5">${s.role}</p>
+                </div>
+                <button onclick="addStaff(${s.id})" class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-bold rounded-md hover:bg-primary hover:text-white transition-all flex items-center gap-0.5 shrink-0">
+                    <span class="material-symbols-outlined text-[12px]">add</span> Giao ca
+                </button>
+            </div>
+            `;
+            }).join('');
+
+            countLabel.innerText = `${state.assigned.length.toString().padStart(2, '0')}/${quota.toString().padStart(2, '0')}`;
+            countLabel.className = state.assigned.length < quota ? 'text-[10px] bg-red-100 text-error px-2 py-0.5 rounded-full font-bold' : 'text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold';
+        }
+
+        window.removeStaff = function (id) {
+            const cellId = getCellId(selectedCell);
+            const state = cellsState[cellId];
+            const index = state.assigned.findIndex(s => s.id === id);
+            if (index > -1) {
+                const staff = state.assigned.splice(index, 1)[0];
+                state.available.push(staff);
+                renderLists();
+            }
+        };
+
+        window.addStaff = function (id) {
+            const cellId = getCellId(selectedCell);
+            const state = cellsState[cellId];
+            const quota = parseInt(selectedCell.dataset.quota);
+            if (state.assigned.length >= quota + 1) {
+                showToast('Cảnh báo: Ca trực đã vượt định mức!');
+            }
+            const index = state.available.findIndex(s => s.id === id);
+            if (index > -1) {
+                const staff = state.available.splice(index, 1)[0];
+                state.assigned.push(staff);
+                renderLists();
+            }
+        };
+
+        function selectCell(cell) {
+            if (selectedCell) selectedCell.classList.remove('active-cell');
+            selectedCell = cell;
+            selectedCell.classList.add('active-cell');
+
+            initCellState(selectedCell);
+
+            // Update sidebar titles
+            document.getElementById('detail-dept').innerText = selectedCell.dataset.dept;
+            const shiftName = selectedCell.dataset.shift;
+            const shiftTime = shiftName === 'Sáng' ? '7h15 - 12h00' : '13h30 - 16h45';
+            document.getElementById('detail-shift').innerText = `${shiftName} (${shiftTime})`;
+            document.getElementById('detail-date').innerText = `${selectedCell.dataset.day} - ${selectedCell.dataset.date}`;
+
+            renderLists();
+        }
+
+        // Attach listeners to all cells
+        document.querySelectorAll('.shift-cell').forEach(cell => {
+            cell.addEventListener('click', () => selectCell(cell));
+        });
+
+        function updateCellUI(cell, assigned, quota) {
+            let countSpan = cell.querySelector('.cell-count');
+            if (!countSpan) {
+                countSpan = document.createElement('span');
+                cell.insertBefore(countSpan, cell.firstChild);
+            }
+            countSpan.className = 'cell-count text-[11px] font-bold';
+            countSpan.innerText = `${assigned}/${quota} BS`;
+
+            let spans = cell.querySelectorAll('span');
+            let statusSpan = spans.length > 1 ? spans[1] : null;
+
+            if (!statusSpan) {
+                statusSpan = document.createElement('span');
+                cell.appendChild(statusSpan);
+            }
+            statusSpan.className = 'text-[8px] font-bold uppercase mt-0.5 text-center px-1';
+
+            // Reset classes
+            cell.classList.remove('bg-emerald-50/50', 'bg-red-50/50', 'bg-blue-50/50', 'bg-secondary-container/10', 'bg-error-container/10', 'bg-primary-fixed/20', 'bg-[#f0f4ff]', 'bg-transparent', 'bg-slate-200', 'opacity-50', 'pointer-events-none');
+
+            // Gray out logic for Off shifts and Non-forecast dates
+            const date = cell.dataset.date;
+            const day = cell.dataset.day;
+            const shift = cell.dataset.shift;
+            const [d, m] = date.split('/');
+            const fullDateStr = `2026-${m}-${d}`;
+            const cellDate = new Date(fullDateStr);
+            const forecastStart = new Date('2026-04-01');
+            const forecastEnd = new Date('2026-04-10');
+
+            const isOffShift = (day === 'CN' || (day === 'T7' && shift === 'Chiều'));
+            const isNotPredicted = cellDate > forecastEnd;
+
+            if (isOffShift || isNotPredicted) {
+                cell.classList.add('bg-slate-200', 'opacity-50', 'pointer-events-none');
+                countSpan.innerText = isOffShift ? 'NGHỈ' : 'N/A';
+                statusSpan.innerText = '';
+                return;
+            }
+
+            if (assigned === quota) {
+                cell.classList.add('bg-transparent');
+                countSpan.classList.add('text-on-surface');
+                statusSpan.classList.add('text-slate-400');
+                statusSpan.innerText = 'ĐỦ';
+            } else if (assigned < quota) {
+                cell.classList.add('bg-red-50/50');
+                countSpan.classList.add('text-error');
+                statusSpan.classList.add('text-error/80');
+                statusSpan.innerText = `THIẾU ${quota - assigned}`;
+            } else {
+                cell.classList.add('bg-blue-50/50');
+                countSpan.classList.add('text-blue-600');
+                statusSpan.classList.add('text-blue-600/80');
+                statusSpan.innerText = `DƯ ${assigned - quota}`;
+            }
+        }
+
+        function updateAllCellsUI() {
+            document.querySelectorAll('.shift-cell').forEach(cell => {
+                const countText = cell.querySelector('.cell-count')?.innerText || '0/0 BS';
+                const assigned = parseInt(countText.split('/')[0]) || 0;
+                const quota = parseInt(cell.dataset.quota) || 0;
+                if (quota > 0) {
+                    updateCellUI(cell, assigned, quota);
+                }
+            });
+        }
+
+        document.getElementById('save-changes-btn').addEventListener('click', async () => {
+            if (!selectedCell) return;
+            const cellId = getCellId(selectedCell);
+            const state = cellsState[cellId];
+            const quota = parseInt(selectedCell.dataset.quota);
+
+            // Sync the main table cell UI with the state
+            updateCellUI(selectedCell, state.assigned.length, quota);
+
+            // If it's Khoa Nội, sync back to Google Sheets
+            if (selectedCell.dataset.dept === 'Nội Tổng Quát') {
+                const [d, m] = selectedCell.dataset.date.split('/');
+                const shiftDate = `2026-${m}-${d}`;
+                const shiftName = selectedCell.dataset.shift === 'Sáng' ? 'Morning' : 'Afternoon';
+                const docsCount = state.assigned.length;
+                const fullUrl = `${GAS_URL}?action=updateDoctor&date=${shiftDate}&shift=${shiftName}&doctors=${docsCount}`;
+                console.log('Syncing to Google Sheets:', fullUrl);
+
+                showToast('Đang đồng bộ với Google Sheets...');
+                try {
+                    // Using a script tag for a true 'fire and forget' cross-origin request that avoids CORS completely
+                    const script = document.createElement('script');
+                    script.src = fullUrl;
+                    document.body.appendChild(script);
+
+                    // Since we can't easily detect success of a cross-origin script tag without JSONP, 
+                    // we'll assume it sent and show success after a short delay
+                    setTimeout(() => {
+                        showToast('Đã gửi yêu cầu cập nhật lên Google Sheet!');
+                    }, 1000);
+                } catch (error) {
+                    console.error('Error updating sheet:', error);
+                    showToast('Lỗi khi gửi dữ liệu.');
+                }
+            } else {
+                showToast('Cập nhật thành công! Phân bổ nhân sự đã được lưu.');
+            }
+        });
+
+        document.getElementById('prev-week-btn').addEventListener('click', () => { currentWeek--; document.getElementById('week-label').innerText = `Tuần ${currentWeek}: ... (Cập nhật)`; showToast('Đang tải lịch tuần trước...'); });
+        document.getElementById('next-week-btn').addEventListener('click', () => { currentWeek++; document.getElementById('week-label').innerText = `Tuần ${currentWeek}: ... (Cập nhật)`; showToast('Đang tải lịch tuần sau...'); });
+        document.getElementById('new-shift-btn')?.addEventListener('click', () => { showToast('Đang mở form tạo ca trực mới.'); });
+
+        // Initial state
+        updateAllCellsUI();
+        const firstCell = document.querySelector('.shift-cell');
+        if (firstCell) selectCell(firstCell);
+
+        fetchSheetData(); // Load GS data on startup
+
+        // Filter Buttons logic
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-primary', 'shadow-sm', 'text-white');
+                    b.classList.add('text-on-surface-variant', 'hover:bg-white/50');
+                });
+                btn.classList.add('bg-primary', 'shadow-sm', 'text-white');
+                btn.classList.remove('text-on-surface-variant', 'hover:bg-white/50');
+
+                const dept = btn.getAttribute('data-dept');
+                document.querySelectorAll('.dept-row').forEach(row => {
+                    if (dept === 'all' || row.getAttribute('data-dept') === dept) {
+                        row.style.display = 'grid';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                showToast(`Đang lọc dữ liệu cho: ${btn.innerText}`);
+            });
+        });
+
+        // Sidebar Toggle Logic
+        const sidebarToggleBtn = document.getElementById('sidebar-toggle');
+        if (sidebarToggleBtn) {
+            if (localStorage.getItem('sidebarState') === 'collapsed') {
+                document.body.classList.add('sidebar-collapsed');
+            }
+            sidebarToggleBtn.addEventListener('click', () => {
+                document.body.classList.toggle('sidebar-collapsed');
+                const isCollapsed = document.body.classList.contains('sidebar-collapsed');
+                localStorage.setItem('sidebarState', isCollapsed ? 'collapsed' : 'expanded');
+            });
+        }
+    </script>
+</body>
+
+</html>

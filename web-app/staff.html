@@ -1,0 +1,569 @@
+<!DOCTYPE html><html class="light" lang="vi"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Công cụ Tối ưu Điều phối Bệnh viện - Quản lý Nhân sự</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-fixed-variant": "#004492",
+              "on-surface-variant": "#424752",
+              "on-surface": "#191c1d",
+              "on-error-container": "#93000a",
+              "surface-dim": "#d9dadb",
+              "on-background": "#191c1d",
+              "background": "#f8f9fa",
+              "surface-container": "#edeeef",
+              "surface-bright": "#f8f9fa",
+              "surface-container-low": "#f3f4f5",
+              "primary-container": "#0057b7",
+              "surface-container-high": "#e7e8e9",
+              "on-primary-container": "#bed2ff",
+              "surface-container-lowest": "#ffffff",
+              "error": "#ba1a1a",
+              "outline": "#727784",
+              "surface": "#f8f9fa",
+              "primary": "#00408b",
+              "on-primary": "#ffffff",
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+          },
+        },
+      }
+    </script>
+<style>
+      body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; color: #191c1d; }
+      .font-manrope { font-family: 'Manrope', sans-serif; }
+      .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      
+      /* Collapsible Sidebar Styles */
+      #sidebar { transition: width 0.3s ease, padding 0.3s ease; }
+      #main-content { transition: margin-left 0.3s ease; }
+      
+      body.sidebar-collapsed #sidebar {
+          width: 5rem !important; /* w-20 */
+          padding-left: 0.75rem !important;
+          padding-right: 0.75rem !important;
+      }
+      body.sidebar-collapsed #main-content {
+          margin-left: 5rem !important; /* ml-20 */
+      }
+      body.sidebar-collapsed .nav-text {
+          display: none !important;
+      }
+      body.sidebar-collapsed .logo-details {
+          display: none !important;
+      }
+      body.sidebar-collapsed #new-shift-btn {
+          padding-left: 0 !important;
+          padding-right: 0 !important;
+          aspect-ratio: 1;
+          justify-content: center;
+          border-radius: 9999px;
+      }
+      body.sidebar-collapsed .nav-item {
+          justify-content: center !important;
+          padding-left: 0 !important;
+          padding-right: 0 !important;
+      }
+      body.sidebar-collapsed #sidebar-toggle {
+          transform: rotate(180deg);
+      }
+
+      /* Custom Checkbox */
+      input[type="checkbox"] {
+          accent-color: #0057b7;
+      }
+      
+      @keyframes slideIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+      }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside id="sidebar" class="fixed left-0 top-0 h-full flex flex-col p-6 gap-6 bg-[#f8fbff] w-64 border-r border-slate-100 z-50">
+<button id="sidebar-toggle" class="absolute -right-3 top-8 w-6 h-6 flex items-center justify-center bg-white border border-slate-200 rounded-full text-slate-500 hover:bg-slate-50 shadow-sm transition-transform duration-300 z-50">
+    <span class="material-symbols-outlined text-[14px]">chevron_left</span>
+</button>
+<div class="flex items-center gap-3 mb-8 px-4 h-10 overflow-hidden shrink-0">
+    <div class="logo-details min-w-[150px]"><h2 class="font-manrope font-bold text-[#4c72d3] text-lg leading-tight">Hanoi Medical</h2><p class="text-[10px] uppercase tracking-widest text-slate-500 font-extrabold mt-1">SHIFT MANAGEMENT</p></div>
+</div>
+<nav class="flex-1 flex flex-col gap-1 overflow-x-hidden no-scrollbar">
+    <a class="nav-item flex items-center gap-4 text-slate-500 px-4 py-3 font-inter text-sm font-semibold hover:bg-blue-50/50 rounded-xl transition-all" href="index.html"><span class="material-symbols-outlined text-[22px] shrink-0">grid_view</span><span class="nav-text whitespace-nowrap">Dashboard</span></a>
+    <a class="nav-item flex items-center gap-4 text-slate-500 px-4 py-3 font-inter text-sm font-semibold hover:bg-blue-50/50 rounded-xl transition-all" href="shifts.html"><span class="material-symbols-outlined text-[22px] shrink-0">schedule</span><span class="nav-text whitespace-nowrap">Shifts</span></a>
+    <a class="nav-item flex items-center gap-4 bg-[#f0f4ff] text-[#4c72d3] rounded-xl px-4 py-3 font-inter text-sm font-bold transition-all" href="staff.html"><span class="material-symbols-outlined text-[22px] shrink-0" style="font-variation-settings: 'FILL' 0, 'wght' 500;">group</span><span class="nav-text whitespace-nowrap">Staff</span></a>
+    <a class="nav-item flex items-center gap-4 text-slate-500 px-4 py-3 font-inter text-sm font-semibold hover:bg-blue-50/50 rounded-xl transition-all" href="reports.html"><span class="material-symbols-outlined text-[22px] shrink-0">bar_chart</span><span class="nav-text whitespace-nowrap">Reports</span></a>
+</nav>
+<div class="mt-auto space-y-6 overflow-x-hidden">
+    <button id="new-shift-btn" class="w-full bg-[#0057B7] text-white py-3.5 px-4 rounded-full font-bold flex items-center gap-2 hover:bg-blue-700 transition-all shadow-md shadow-blue-200 shrink-0"><span class="material-symbols-outlined text-lg">add</span><span class="nav-text text-sm whitespace-nowrap">New Shift</span></button>
+    <div class="pt-4 space-y-1">
+        <a class="nav-item flex items-center gap-4 text-slate-500 px-4 py-2 font-inter text-sm font-semibold hover:text-primary transition-all" href="#"><span class="material-symbols-outlined text-[22px] shrink-0">settings</span><span class="nav-text whitespace-nowrap">Settings</span></a>
+        <a class="nav-item flex items-center gap-4 text-slate-500 px-4 py-2 font-inter text-sm font-semibold hover:text-primary transition-all" href="#"><span class="material-symbols-outlined text-[22px] shrink-0">help_outline</span><span class="nav-text whitespace-nowrap">Help</span></a>
+    </div>
+</div>
+</aside> <!-- Main Content -->
+<main id="main-content" class="flex-1 ml-64 p-8 min-h-screen pb-20 relative">
+    <div class="flex justify-between items-end mb-8 relative z-20">
+        <div>
+            <h2 class="text-3xl font-headline font-extrabold text-on-surface tracking-tight">Danh sách Nhân sự</h2>
+            <p class="text-on-surface-variant body-md mt-1">Quản lý và điều phối chuyên môn toàn viện</p>
+        </div>
+        <div class="flex gap-3">
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+                <input id="search-input" type="text" placeholder="Tìm tên, khoa, chức danh..." class="pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary w-64 shadow-sm transition-all">
+            </div>
+            
+            <!-- Filter Dropdown Container -->
+            <div class="relative">
+                <button id="filter-btn" class="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 shadow-sm hover:bg-slate-50 transition-colors relative">
+                    <span class="material-symbols-outlined text-[18px]">filter_list</span> Lọc
+                    <span id="filter-badge" class="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center border border-white hidden">0</span>
+                </button>
+                
+                <!-- Filter Popover -->
+                <div id="filter-popover" class="absolute right-0 top-full mt-2 w-72 bg-white rounded-2xl shadow-xl border border-slate-100 hidden flex flex-col overflow-hidden origin-top-right transform scale-95 opacity-0 transition-all">
+                    <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                        <h4 class="font-bold text-slate-700">Bộ lọc</h4>
+                        <button id="clear-filters" class="text-xs font-bold text-primary hover:text-blue-800">Xóa bộ lọc</button>
+                    </div>
+                    <div class="p-4 overflow-y-auto max-h-[60vh] space-y-5">
+                        <!-- Khoa -->
+                        <div>
+                            <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Khoa</h5>
+                            <div class="space-y-2 filter-group" data-group="dept">
+                                <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" value="Nội Tổng Quát" class="rounded border-slate-300 text-primary focus:ring-primary/20"><span class="text-sm font-medium text-slate-600 group-hover:text-slate-900 transition-colors">Nội Tổng Quát</span></label>
+                                <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" value="Tim Mạch" class="rounded border-slate-300 text-primary focus:ring-primary/20"><span class="text-sm font-medium text-slate-600 group-hover:text-slate-900 transition-colors">Tim Mạch</span></label>
+                                <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" value="Cấp cứu" class="rounded border-slate-300 text-primary focus:ring-primary/20"><span class="text-sm font-medium text-slate-600 group-hover:text-slate-900 transition-colors">Cấp cứu</span></label>
+                                <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" value="Thần Kinh" class="rounded border-slate-300 text-primary focus:ring-primary/20"><span class="text-sm font-medium text-slate-600 group-hover:text-slate-900 transition-colors">Thần Kinh</span></label>
+                                <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" value="Ngoại Khoa" class="rounded border-slate-300 text-primary focus:ring-primary/20"><span class="text-sm font-medium text-slate-600 group-hover:text-slate-900 transition-colors">Ngoại Khoa</span></label>
+                            </div>
+                        </div>
+                        <!-- Trạng thái -->
+                        <div>
+                            <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Trạng thái</h5>
+                            <div class="space-y-2 filter-group" data-group="status">
+                                <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" value="Sẵn sàng" class="rounded text-emerald-500 border-slate-300 focus:ring-emerald-500/20"><span class="text-sm font-medium text-slate-600 group-hover:text-slate-900">Sẵn sàng</span></label>
+                                <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" value="Đang trực" class="rounded text-blue-500 border-slate-300 focus:ring-blue-500/20"><span class="text-sm font-medium text-slate-600 group-hover:text-slate-900">Đang trực</span></label>
+                                <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" value="Đang điều phối" class="rounded text-indigo-500 border-slate-300 focus:ring-indigo-500/20"><span class="text-sm font-medium text-slate-600 group-hover:text-slate-900">Đang điều phối</span></label>
+                                <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" value="Nghỉ phép" class="rounded border-slate-300 text-slate-500 focus:ring-slate-500/20"><span class="text-sm font-medium text-slate-600 group-hover:text-slate-900">Nghỉ phép</span></label>
+                                <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" value="Bận" class="rounded border-slate-300 text-red-500 focus:ring-red-500/20"><span class="text-sm font-medium text-slate-600 group-hover:text-slate-900">Bận</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button id="add-btn" class="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-xl text-sm font-bold shadow-sm shadow-blue-200 hover:bg-blue-700 transition-colors">
+                <span class="material-symbols-outlined text-[18px]">person_add</span> Thêm mới
+            </button>
+        </div>
+    </div>
+
+    <!-- Active Filters Display -->
+    <div id="active-filters-container" class="mb-6 flex flex-wrap gap-2 empty:hidden"></div>
+
+    <!-- Staff Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative z-10" id="staff-grid">
+        <!-- Staff cards generated by JS -->
+    </div>
+</main>
+
+<!-- Info Toast -->
+<div id="toast" class="fixed bottom-8 right-8 bg-slate-800 text-white px-6 py-4 rounded-2xl shadow-2xl transform translate-y-24 opacity-0 transition-all duration-300 z-[100] flex items-center gap-3">
+    <span class="material-symbols-outlined text-white">info</span>
+    <span id="toast-message">Thông báo</span>
+</div>
+
+<!-- Drawer / Profile Detail Modal -->
+<div id="profile-drawer-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60] opacity-0 pointer-events-none transition-opacity duration-300"></div>
+<div id="profile-drawer" class="fixed top-0 right-0 h-full w-[450px] max-w-full bg-white shadow-2xl z-[70] transform translate-x-full transition-transform duration-300 flex flex-col">
+    <!-- Drawer Header -->
+    <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+        <h3 class="font-bold text-lg text-slate-800 font-headline">Hồ sơ Nhân sự</h3>
+        <button id="close-drawer" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200 text-slate-500 transition-colors">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+    </div>
+    
+    <!-- Drawer Content (Dynamically Populated) -->
+    <div id="drawer-content" class="flex-1 overflow-y-auto p-8 flex flex-col min-h-0">
+        <!-- Filled by JS -->
+    </div>
+
+    <!-- Drawer Footer -->
+    <div class="p-6 border-t border-slate-100 bg-slate-50 flex gap-3">
+         <button class="flex-1 px-4 py-2.5 bg-white border border-slate-300 rounded-xl font-bold text-slate-600 hover:bg-slate-100 transition-colors">Nhắn tin</button>
+         <button class="flex-1 px-4 py-2.5 bg-primary text-white rounded-xl font-bold shadow-sm shadow-blue-200 hover:bg-blue-700 transition-colors">Phân công ca</button>
+    </div>
+</div>
+
+<script>
+    // 1. DATA MOCKUP =====================================
+    // Using generated sprite sheet of Vietnamese medical staff with CSS background-position
+    // Assuming a 4x4 grid (16 images total)
+    // CSS sprite matching based on gender and age
+    // We have two 2x4 sprite sheets (8 images each). Row 0 (idx 0-3) = young, Row 1 (idx 4-7) = older.
+    const getSpriteStyle = (gender, index) => {
+        const col = index % 4;
+        const row = Math.floor(index / 4);
+        
+        const posX = col * 33.3333; // 4 columns
+        // background-size: 400% auto keeps original aspect ratio.
+        // Image is 1:1, so background is 4x wide and 4x tall relative to 84px container (= 336px tall).
+        // Each of the 2 rows is 168px tall. Container is 84px tall.
+        // row 0: shift down slightly (~12%) to crop the top headroom and show face.
+        // row 1: shift down to (~75%) to crop headroom of the second row cell.
+        const posY = row === 0 ? 12 : 75; 
+        
+        const file = gender === 'M' ? 'staff-men-sprite.png' : 'staff-women-sprite.png';
+        return `background-image: url('${file}'); background-size: 400% auto; background-position: ${posX}% ${posY}%; background-repeat: no-repeat;`;
+    };
+
+    const allStaff = [
+        // Males
+        { id: 1, name: 'BS. Lê Nam Hải', gender: 'M', spriteIndex: 0, role: 'Bác sĩ trực', dept: 'Cấp cứu', status: 'Đang trực', experience: '6 năm', currentShift: 'Ca Sáng (06:00 - 14:00)' },
+        { id: 3, name: 'BS. Nguyễn Văn Tùng', gender: 'M', spriteIndex: 1, role: 'Bác sĩ trực', dept: 'Nội Tổng Quát', status: 'Đang điều phối', experience: '5 năm', currentShift: 'Hỗ trợ Phân bổ Tầng 3' },
+        { id: 7, name: 'BS. Đặng Việt Cường', gender: 'M', spriteIndex: 2, role: 'Bác sĩ trực', dept: 'Thần Kinh', status: 'Đang trực', experience: '4 năm', currentShift: 'Ca Sáng (06:00 - 14:00)' },
+        { id: 9, name: 'BS. Trần Hùng', gender: 'M', spriteIndex: 3, role: 'Bác sĩ trực', dept: 'Cấp cứu', status: 'Đang trực', experience: '3 năm', currentShift: 'Khu vực Hồi sức đỏ' },
+        { id: 4, name: 'BS. Phạm Hoàng Long', gender: 'M', spriteIndex: 4, role: 'Trưởng ca', dept: 'Cấp cứu', status: 'Nghỉ phép', experience: '15 năm', currentShift: 'Nghỉ phép năm (Đến 05/06)' },
+        { id: 10, name: 'BS. Bùi Quang Tuấn', gender: 'M', spriteIndex: 5, role: 'Trưởng ca', dept: 'Ngoại Khoa', status: 'Sẵn sàng', experience: '18 năm', currentShift: 'Chuyên môn hội chẩn' },
+        { id: 13, name: 'BS. Phan Anh Tú', gender: 'M', spriteIndex: 6, role: 'Bác sĩ trực', dept: 'Thần Kinh', status: 'Đang trực', experience: '14 năm', currentShift: 'Gác trực IC' },
+        { id: 15, name: 'BS. Đỗ Duy Khoa', gender: 'M', spriteIndex: 7, role: 'Bác sĩ trực', dept: 'Cấp cứu', status: 'Sẵn sàng', experience: '11 năm', currentShift: 'Trực máy điều phối T4' },
+        
+        // Females
+        { id: 5, name: 'BS. Vũ Thùy Linh', gender: 'F', spriteIndex: 0, role: 'Chuyên khoa', dept: 'Ngoại Khoa', status: 'Sẵn sàng', experience: '7 năm', currentShift: 'On-call ưu tiên' },
+        { id: 11, name: 'BS. Võ Thị Trang', gender: 'F', spriteIndex: 1, role: 'Bác sĩ trực', dept: 'Tim Mạch', status: 'Nghỉ phép', experience: '4 năm', currentShift: 'Thai sản (Đến 12/08)' },
+        { id: 12, name: 'BS. Hoàng Thanh Mai', gender: 'F', spriteIndex: 2, role: 'Bác sĩ trực', dept: 'Nội Tổng Quát', status: 'Sẵn sàng', experience: '2 năm', currentShift: 'Dự phòng Ca Chiều' },
+        { id: 2, name: 'BS. Trần Kim Oanh', gender: 'F', spriteIndex: 3, role: 'Chuyên khoa', dept: 'Tim Mạch', status: 'Sẵn sàng', experience: '5 năm', currentShift: 'Ca trực tiếp theo: Tối' },
+        { id: 6, name: 'BS. Lê Ánh Nguyệt', gender: 'F', spriteIndex: 4, role: 'Bác sĩ chuyên khoa', dept: 'Tim Mạch', status: 'Bận', experience: '14 năm', currentShift: 'Đang trực Phòng mổ 2' },
+        { id: 8, name: 'BS. Mai Phương Chi', gender: 'F', spriteIndex: 5, role: 'Chuyên khoa', dept: 'Nội Tổng Quát', status: 'Sẵn sàng', experience: '15 năm', currentShift: 'Khám ngoại trú (Phòng 102)' },
+        { id: 14, name: 'BS. Lý Phương Lan', gender: 'F', spriteIndex: 6, role: 'Chuyên khoa', dept: 'Nội Tổng Quát', status: 'Đang điều phối', experience: '12 năm', currentShift: 'Hỗ trợ Khoa Lây nhiễm' },
+        { id: 16, name: 'BS. Trịnh Hải Băng', gender: 'F', spriteIndex: 7, role: 'Trưởng ca', dept: 'Thần Kinh', status: 'Bận', experience: '20 năm', currentShift: 'Đang tham gia Hội thảo' }
+    ];
+
+    // Optional: Sort by ID to keep previous visual order, or just keep grouped. I will sort them by ID to show variety
+    allStaff.sort((a,b) => a.id - b.id);
+
+    // 2. UTILS & STYLING =================================
+    const showToast = (message) => {
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toast-message');
+        toastMsg.innerText = message;
+        toast.classList.remove('translate-y-24', 'opacity-0');
+        setTimeout(() => toast.classList.add('translate-y-24', 'opacity-0'), 3000);
+    };
+
+    const getStatusStyle = (status) => {
+        switch(status) {
+            case 'Sẵn sàng': return { badge: 'bg-emerald-50 text-emerald-600 border-emerald-100', dot: 'bg-emerald-500' };
+            case 'Đang trực': return { badge: 'bg-blue-50 text-blue-600 border-blue-100', dot: 'bg-blue-500' };
+            case 'Đang điều phối': return { badge: 'bg-indigo-50 text-indigo-600 border-indigo-100', dot: 'bg-indigo-500' };
+            case 'Nghỉ phép': return { badge: 'bg-slate-100 text-slate-500 border-slate-200', dot: 'bg-slate-400' };
+            case 'Bận': return { badge: 'bg-red-50 text-red-600 border-red-100', dot: 'bg-red-500' };
+            default: return { badge: 'bg-slate-50 text-slate-600 border-slate-200', dot: 'bg-slate-300' };
+        }
+    };
+
+    // 3. RENDER LOGIC ====================================
+    const grid = document.getElementById('staff-grid');
+    
+    const renderStaff = (list) => {
+        grid.innerHTML = list.map((s, index) => {
+            const styles = getStatusStyle(s.status);
+            // Added animation stagger for smooth entry
+            const delay = (index % 12) * 50; 
+            
+            return `
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300 group flex flex-col items-center text-center relative overflow-hidden animate-in" style="animation-delay: ${delay}ms; opacity: 0; fill-mode: forwards; animation: slideIn 0.4s ease-out forwards;">
+                <!-- 3 Dots Menu -->
+                <div class="absolute top-4 right-4 z-10">
+                    <button class="w-8 h-8 flex items-center justify-center rounded-full text-slate-300 hover:text-slate-600 hover:bg-slate-50 transition-colors" onclick="event.stopPropagation(); showToast('Mở tùy chọn nhanh cho ${s.name}');">
+                        <span class="material-symbols-outlined text-[20px]">more_vert</span>
+                    </button>
+                </div>
+
+                <!-- Avatar -->
+                <div class="w-[84px] h-[84px] mb-4 inline-block relative cursor-pointer" onclick="openProfile(${s.id})">
+                   <div class="w-full h-full rounded-full border-[3px] border-white shadow-sm hover:scale-105 transition-transform duration-300" style="${getSpriteStyle(s.gender, s.spriteIndex)}"></div>
+                   <div class="absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-white ${styles.dot} shadow-sm"></div>
+                </div>
+
+                <!-- Info -->
+                <h3 class="font-bold text-lg text-slate-800 leading-tight cursor-pointer hover:text-primary transition-colors" onclick="openProfile(${s.id})">${s.name}</h3>
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mt-1 mb-4">${s.role}</p>
+                
+                <!-- Inner card info -->
+                <div class="w-full bg-slate-50/70 rounded-xl p-3 grid grid-cols-2 gap-2 text-left mb-4 flex-1">
+                    <div>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase">Khoa</p>
+                        <p class="text-[13px] font-bold text-slate-700 truncate" title="${s.dept}">${s.dept}</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase">Kinh nghiệm</p>
+                        <p class="text-[13px] font-bold text-slate-700 truncate">${s.experience}</p>
+                    </div>
+                    <div class="col-span-2 pt-2 border-t border-slate-200/50">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase">Công việc hiện tại</p>
+                        <p class="text-[12px] font-medium text-slate-600 leading-snug mt-0.5" title="${s.currentShift}">${s.currentShift}</p>
+                    </div>
+                </div>
+                
+                <!-- Bottom Action -->
+                <div class="mt-auto w-full flex justify-between items-center bg-white pt-1">
+                    <span class="px-2.5 py-1 rounded text-[11px] font-bold border ${styles.badge}">${s.status}</span>
+                    <button onclick="openProfile(${s.id})" class="text-[12px] font-bold text-primary px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors">Chi tiết</button>
+                </div>
+            </div>
+            `;
+        }).join('');
+        
+        if (list.length === 0) {
+            grid.innerHTML = `
+                <div class="col-span-full py-20 flex flex-col items-center justify-center text-slate-400">
+                    <span class="material-symbols-outlined text-4xl mb-3 text-slate-300">search_off</span>
+                    <p class="font-medium text-slate-500">Không tìm thấy hồ sơ nào khớp với bộ lọc.</p>
+                </div>
+            `;
+        }
+    };
+
+    // 4. FILTERING & SEARCH LOGIC ========================
+    const searchInput = document.getElementById('search-input');
+    const filterBtn = document.getElementById('filter-btn');
+    const filterPopover = document.getElementById('filter-popover');
+    const filterCheckboxes = document.querySelectorAll('#filter-popover input[type="checkbox"]');
+    const activeFiltersContainer = document.getElementById('active-filters-container');
+    const clearFiltersBtn = document.getElementById('clear-filters');
+    const filterBadge = document.getElementById('filter-badge');
+
+    let isFilterOpen = false;
+
+    // Toggle Popover
+    filterBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        isFilterOpen = !isFilterOpen;
+        if (isFilterOpen) {
+            filterPopover.classList.remove('hidden');
+            // small delay to allow display:block to apply before animating opacity
+            setTimeout(() => {
+                filterPopover.classList.remove('scale-95', 'opacity-0');
+            }, 10);
+            filterBtn.classList.add('ring-2', 'ring-primary/20', 'border-primary');
+        } else {
+            closeFilters();
+        }
+    });
+
+    const closeFilters = () => {
+        isFilterOpen = false;
+        filterPopover.classList.add('scale-95', 'opacity-0');
+        filterBtn.classList.remove('ring-2', 'ring-primary/20', 'border-primary');
+        setTimeout(() => {
+            filterPopover.classList.add('hidden');
+        }, 300); // match transition duration
+    };
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+        if (isFilterOpen && !filterPopover.contains(e.target) && !filterBtn.contains(e.target)) {
+            closeFilters();
+        }
+    });
+
+    // Prevent closing when clicking inside popover
+    filterPopover.addEventListener('click', (e) => e.stopPropagation());
+
+    const getActiveFilters = () => {
+        const filters = { dept: [], status: [] };
+        filterCheckboxes.forEach(cb => {
+            if (cb.checked) {
+                const group = cb.closest('.filter-group').dataset.group;
+                filters[group].push(cb.value);
+            }
+        });
+        return filters;
+    };
+
+    const updateGrid = () => {
+        const term = searchInput.value.toLowerCase().trim();
+        const filters = getActiveFilters();
+        
+        const activeCount = filters.dept.length + filters.status.length;
+        
+        // Update Badge
+        if (activeCount > 0) {
+            filterBadge.innerText = activeCount;
+            filterBadge.classList.remove('hidden');
+        } else {
+            filterBadge.classList.add('hidden');
+        }
+
+        // Render Tag Bubbles
+        activeFiltersContainer.innerHTML = '';
+        Object.entries(filters).forEach(([group, values]) => {
+            values.forEach(val => {
+                const tag = document.createElement('div');
+                tag.className = 'flex items-center gap-1.5 px-3 py-1 bg-white border border-slate-200 rounded-full text-xs font-bold text-slate-600 shadow-sm';
+                tag.innerHTML = `
+                    <span>${val}</span>
+                    <button class="w-4 h-4 rounded-full hover:bg-slate-200 flex flex-col items-center justify-center text-slate-400 hover:text-slate-700 transition-colors" data-val="${val}">
+                        <span class="material-symbols-outlined text-[12px]">close</span>
+                    </button>
+                `;
+                // Remove individual filter click
+                tag.querySelector('button').addEventListener('click', (e) => {
+                    const valueToRemove = e.currentTarget.dataset.val;
+                    const cb = Array.from(filterCheckboxes).find(c => c.value === valueToRemove);
+                    if (cb) {
+                        cb.checked = false;
+                        updateGrid();
+                    }
+                });
+                activeFiltersContainer.appendChild(tag);
+            });
+        });
+
+        // Filter Data
+        const filtered = allStaff.filter(s => {
+            // Text Search
+            const matchesTerm = !term || 
+                s.name.toLowerCase().includes(term) || 
+                s.dept.toLowerCase().includes(term) || 
+                s.role.toLowerCase().includes(term);
+                
+            // Checkbox filters
+            const matchesDept = filters.dept.length === 0 || filters.dept.includes(s.dept);
+            const matchesStatus = filters.status.length === 0 || filters.status.includes(s.status);
+
+            return matchesTerm && matchesDept && matchesStatus;
+        });
+
+        renderStaff(filtered);
+    };
+
+    // Attach listener to individual checkboxes
+    filterCheckboxes.forEach(cb => {
+        cb.addEventListener('change', updateGrid);
+    });
+
+    searchInput.addEventListener('input', updateGrid);
+
+    clearFiltersBtn.addEventListener('click', () => {
+        filterCheckboxes.forEach(cb => cb.checked = false);
+        searchInput.value = '';
+        updateGrid();
+        closeFilters();
+    });
+
+    // 5. PROFILE DRAWER LOGIC ============================
+    const drawerOverlay = document.getElementById('profile-drawer-overlay');
+    const drawer = document.getElementById('profile-drawer');
+    const closeDrawerBtn = document.getElementById('close-drawer');
+    const drawerContent = document.getElementById('drawer-content');
+
+    // Global function to be called from card templates
+    window.openProfile = (id) => {
+        const staff = allStaff.find(s => s.id === id);
+        if (!staff) return;
+
+        const styles = getStatusStyle(staff.status);
+
+        // Populate Content
+        drawerContent.innerHTML = `
+            <div class="flex flex-col items-center text-center">
+                <div class="w-32 h-32 relative mb-5">
+                    <div class="w-full h-full rounded-full border-4 border-white shadow-md cursor-pointer" style="${getSpriteStyle(staff.gender, staff.spriteIndex)}"></div>
+                    <div class="absolute bottom-2 right-2 w-5 h-5 rounded-full border-[3px] border-white ${styles.dot} shadow-sm"></div>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 font-headline leading-tight">${staff.name}</h2>
+                <div class="flex items-center gap-2 mt-2 break-words justify-center">
+                     <span class="text-sm font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">${staff.role}</span>
+                     <span class="text-sm font-bold border ${styles.badge} px-3 py-1 rounded-full">${staff.status}</span>
+                </div>
+            </div>
+
+            <div class="mt-10 space-y-6">
+                <!-- Section 1: Overview -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-surface p-4 rounded-xl border border-slate-100">
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1 items-center flex gap-1"><span class="material-symbols-outlined text-[14px]">domain</span> Khoa / Trực thuộc</p>
+                        <p class="font-bold text-slate-700">${staff.dept}</p>
+                    </div>
+                    <div class="bg-surface p-4 rounded-xl border border-slate-100">
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1 items-center flex gap-1"><span class="material-symbols-outlined text-[14px]">military_tech</span> Kinh nghiệm</p>
+                        <p class="font-bold text-slate-700">${staff.experience}</p>
+                    </div>
+                </div>
+
+                <!-- Section 2: Current Status Details -->
+                <div class="bg-blue-50/50 p-5 rounded-xl border border-blue-100/50">
+                    <h4 class="text-xs font-bold text-blue-600 uppercase tracking-widest mb-3 flex items-center gap-2"><span class="material-symbols-outlined text-[16px]">assignment</span> Lịch trình hiện tại</h4>
+                    <div class="bg-white rounded-lg p-4 shadow-sm border border-slate-100">
+                        <p class="font-bold text-slate-800">${staff.currentShift}</p>
+                        <p class="text-xs text-slate-500 mt-1">Ghi chú: Lịch biểu có thể thay đổi trong trường hợp khẩn cấp cấp viện.</p>
+                    </div>
+                </div>
+
+                <!-- Section 3: Contact Info (Mocked) -->
+                <div>
+                     <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Thông tin liên hệ (Nội bộ)</h4>
+                     <div class="space-y-3">
+                         <div class="flex items-center gap-3 text-sm">
+                             <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-slate-500"><span class="material-symbols-outlined text-[16px]">call</span></div>
+                             <span class="font-medium text-slate-700">Máy nhánh: 104${staff.id}</span>
+                         </div>
+                         <div class="flex items-center gap-3 text-sm">
+                             <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-slate-500"><span class="material-symbols-outlined text-[16px]">mail</span></div>
+                             <span class="font-medium text-slate-700">${staff.name.split(' ').pop().toLowerCase().replace(/[^a-z0-9]/g,'')}@hmh.vn</span>
+                         </div>
+                     </div>
+                </div>
+            </div>
+        `;
+
+        // Show Drawer
+        drawerOverlay.classList.remove('opacity-0', 'pointer-events-none');
+        drawer.classList.remove('translate-x-full');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    };
+
+    const closeDrawer = () => {
+        drawerOverlay.classList.add('opacity-0', 'pointer-events-none');
+        drawer.classList.add('translate-x-full');
+        document.body.style.overflow = '';
+    };
+
+    closeDrawerBtn.addEventListener('click', closeDrawer);
+    drawerOverlay.addEventListener('click', closeDrawer);
+
+
+    // Init
+    renderStaff(allStaff);
+
+    // Sidebar Toggle Logic
+    const sidebarToggleBtn = document.getElementById('sidebar-toggle');
+    if (sidebarToggleBtn) {
+        if (localStorage.getItem('sidebarState') === 'collapsed') {
+            document.body.classList.add('sidebar-collapsed');
+        }
+        sidebarToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('sidebar-collapsed');
+            const isCollapsed = document.body.classList.contains('sidebar-collapsed');
+            localStorage.setItem('sidebarState', isCollapsed ? 'collapsed' : 'expanded');
+        });
+    }
+</script>
+</body></html>

@@ -1,0 +1,940 @@
+{
+  "name": "Chatbot Dự Đoán Khung Giờ copy update",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Xin chào! Tôi là trợ lý ảo của Khoa Nội. Tôi có thể giúp bạn:\n- Tư vấn khoa khám phù hợp\n- Gợi ý khung giờ khám ít đông\n- Hướng dẫn nội quy bệnh viện\n\nBạn cần hỗ trợ gì?",
+        "options": {
+          "inputPlaceholder": "Nhập câu hỏi của bạn...",
+          "loadPreviousSession": "memory",
+          "subtitle": "Hỏi tôi về khung giờ phù hợp!",
+          "title": "Chatbot Hỗ Trợ"
+        }
+      },
+      "id": "c84df9a8-f890-439e-b1fd-b85320706f81",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -208,
+        -352
+      ],
+      "webhookId": "418d7a73-6e9d-4b26-a113-08ececdf340b"
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "id": "666ca04d-435e-49dd-8054-b825f29f8446",
+      "name": "Conversation Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        848,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {
+          "maxTokens": 500
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        720,
+        80
+      ],
+      "id": "ca35a8c1-0e0b-4436-8535-acd1756d1a9a",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "GO8rQ2JLECGzFmB1",
+          "name": "OpenRouter account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -144,
+        -128
+      ],
+      "id": "242ea7b1-67bd-470c-b6f3-6f331a531f77",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "16hflPQt0roGL63Ns1X2Y0vlrrYWBoYVnN6kikTeUJOY",
+          "mode": "list",
+          "cachedResultName": "Usecase",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16hflPQt0roGL63Ns1X2Y0vlrrYWBoYVnN6kikTeUJOY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Usecase",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16hflPQt0roGL63Ns1X2Y0vlrrYWBoYVnN6kikTeUJOY/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": []
+        },
+        "options": {}
+      },
+      "id": "9d640c4d-c4f9-4458-96a2-2f2a6573fae7",
+      "name": "Q&A Scenarios",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        976,
+        80
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xZiG1hpSI1I2vwHH",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1fk0e05GIeKqRnCfs8XplwkpNKcctWoUFcfYfIbTFFPQ",
+          "mode": "list",
+          "cachedResultName": "hospital_dataset",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fk0e05GIeKqRnCfs8XplwkpNKcctWoUFcfYfIbTFFPQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1867757610,
+          "mode": "list",
+          "cachedResultName": "forecast_data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fk0e05GIeKqRnCfs8XplwkpNKcctWoUFcfYfIbTFFPQ/edit#gid=1867757610"
+        },
+        "options": {}
+      },
+      "id": "097c07dd-e102-4490-812d-9c4bd12c6046",
+      "name": "Forecast Data",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        1104,
+        80
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xZiG1hpSI1I2vwHH",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {
+          "maxTokens": 200
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        160,
+        -128
+      ],
+      "id": "7c28794e-6094-405c-8dfe-7b62e371f24c",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "GO8rQ2JLECGzFmB1",
+          "name": "OpenRouter account 3"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        288,
+        -128
+      ],
+      "id": "0325427b-a1b7-459b-862d-fb32249f4c19",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {
+          "maxTokens": 500
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        784,
+        -432
+      ],
+      "id": "e92ff7f2-2755-4ede-93a2-4e7b3ab5e2f7",
+      "name": "OpenRouter Chat Model2",
+      "credentials": {
+        "openRouterApi": {
+          "id": "GO8rQ2JLECGzFmB1",
+          "name": "OpenRouter account 3"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        912,
+        -432
+      ],
+      "id": "5aef04e9-a97c-4d93-be9e-d11e8ca86302",
+      "name": "Simple Memory2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ JSON.parse($json.output).message }}",
+        "options": {
+          "systemMessage": "Bạn là chatbot chuyên trả lời về NỘI QUY bệnh viện.\n\n-----------------------------------\nDATA\n-----------------------------------\n\nBạn chỉ được dùng dữ liệu từ Google Sheets.\n\n-----------------------------------\nNHIỆM VỤ\n-----------------------------------\n\n- Tìm câu trả lời đúng trong dữ liệu\n- Trả lời rõ ràng, dễ hiểu\n\n-----------------------------------\nQUY TẮC\n-----------------------------------\n\n1. Nếu tìm thấy:\n→ Trả lời trực tiếp\n\n2. Nếu không có:\n→ Trả lời:\n\"Hiện tại tôi chưa tìm thấy thông tin trong hệ thống. Bạn vui lòng liên hệ quầy tiếp nhận.\"\n\n3. KHÔNG:\n- Suy đoán\n- Tự tạo thông tin\n- Tư vấn lịch\n\n-----------------------------------\nSTYLE\n-----------------------------------\n\n- Ngắn gọn\n- Lịch sự\n- Chuẩn nhân viên bệnh viện",
+          "maxIterations": 20
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        848,
+        -656
+      ],
+      "id": "bd586346-832d-4544-8969-61eefbe37487",
+      "name": "AI Agent1 nội quy"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "16hflPQt0roGL63Ns1X2Y0vlrrYWBoYVnN6kikTeUJOY",
+          "mode": "list",
+          "cachedResultName": "Usecase",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16hflPQt0roGL63Ns1X2Y0vlrrYWBoYVnN6kikTeUJOY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1153525622,
+          "mode": "list",
+          "cachedResultName": "Hospital_Rules",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16hflPQt0roGL63Ns1X2Y0vlrrYWBoYVnN6kikTeUJOY/edit#gid=1153525622"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        1072,
+        -448
+      ],
+      "id": "e79cef67-3620-48d4-8055-9cc0ce113628",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xZiG1hpSI1I2vwHH",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "rightValue": "\"noi_quy\"",
+                    "id": "bfd52eaa-6f0f-40d3-ab2f-84da8d1a27bb"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Nội quy"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "rightValue": "=\"dat_lich\"",
+                    "id": "3474e922-7feb-4f81-bdb6-c257aa89a229"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Đặt lịch"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8f6bf312-6447-4c75-96c3-9023b656c2d4",
+      "name": "Route By Intent",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        496,
+        -352
+      ]
+    },
+    {
+      "parameters": {
+        "content": "🔄 ROUTER AGENT\n\nPhân loại intent:\n- noi_quy → Agent nội quy\n- dat_lich → Agent đặt lịch",
+        "color": 2
+      },
+      "id": "70f4310e-61c8-4b20-9b0f-4cc090ef3afa",
+      "name": "Router Info",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        144,
+        -496
+      ]
+    },
+    {
+      "parameters": {
+        "content": "📋 NỘI QUY AGENT\n\nTrả lời về:\n- Giờ làm việc\n- Quy trình khám\n- Bảo hiểm\n- Nội quy bệnh viện",
+        "color": 3
+      },
+      "id": "54c19667-1a01-4f48-bcd3-8e077dddc6cf",
+      "name": "Nội Quy Info",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1296,
+        -656
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.output }}",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              },
+              "rightValue": "=đã được đặt lịch khám thành công",
+              "id": "8eecbde9-6d2c-4dc8-9650-31a45fd55179"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "1c9db55e-079d-4902-877b-3ee2f47915d6",
+      "name": "Check If Booking",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1248,
+        -144
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = items[0].json.output;\n\n// Nếu không có dữ liệu\nif (!raw || raw.trim() === \"\") {\n  return [{\n    json: {\n      error: \"No output found\",\n      raw\n    }\n  }];\n}\n\n// Bỏ các ký tự escape \\\" trong chuỗi\nlet cleaned = raw.trim();\n\n// Loại bỏ dấu nháy thừa ở đầu/cuối nếu có\nif (cleaned.startsWith('\"') && cleaned.endsWith('\"')) {\n  cleaned = cleaned.slice(1, -1);\n}\n\n// Chuyển \\\" → \"\ncleaned = cleaned.replace(/\\\\\"/g, '\"');\n\nlet data;\ntry {\n  data = JSON.parse(cleaned);\n} catch (e) {\n  return [{\n    json: {\n      error: \"JSON parse failed\",\n      raw: cleaned\n    }\n  }];\n}\n\n// Trả về object chuẩn\nreturn [{\n  json: {\n    patient_name: data.patient_name || \"\",\n    phone: (data.phone || \"\").replace(/\\D/g, \"\"), // chỉ lấy số\n    date: data.date || \"\",\n    shift: data.shift || \"\",\n    time_range: data.time_range || \"\"\n  }\n}];"
+      },
+      "id": "fb9a255c-0c95-48bc-b653-66e3323f5e66",
+      "name": "Parse Booking JSON",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1856,
+        -144
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "16hflPQt0roGL63Ns1X2Y0vlrrYWBoYVnN6kikTeUJOY",
+          "mode": "list",
+          "cachedResultName": "Usecase",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16hflPQt0roGL63Ns1X2Y0vlrrYWBoYVnN6kikTeUJOY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1288320347,
+          "mode": "list",
+          "cachedResultName": "bookings",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16hflPQt0roGL63Ns1X2Y0vlrrYWBoYVnN6kikTeUJOY/edit#gid=1288320347"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "patient_name": "={{ $json.patient_name }}",
+            "phone": "={{ $json.phone }}",
+            "time_range": "={{ $json.time_range }}",
+            "date": "={{ $json.date }}",
+            "shift": "={{ $json.shift }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "patient_name",
+              "displayName": "patient_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "shift",
+              "displayName": "shift",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "time_range",
+              "displayName": "time_range",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "cb2ce8e4-470c-4e96-acfe-a0e9ec234344",
+      "name": "Append Booking To Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2048,
+        -144
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xZiG1hpSI1I2vwHH",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "📅 ĐẶT LỊCH AGENT\n\nTư vấn & đặt lịch:\n- Dùng Q&A Scenarios\n- Dùng Forecast Data\n- Thu thập booking info\n",
+        "width": 224,
+        "color": 4
+      },
+      "id": "aeb2119a-a9a4-4ebf-b383-16237b17ab62",
+      "name": "Đặt Lịch Info",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        880,
+        -288
+      ]
+    },
+    {
+      "parameters": {
+        "content": "✅ BOOKING FLOW\n\nKhi có đủ thông tin:\n- Parse JSON\n- Lưu vào Google Sheets",
+        "color": 5
+      },
+      "id": "4afc961a-8c22-4b14-b7ff-b6b087c7dbcc",
+      "name": "Booking Flow",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        -288
+      ]
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {
+          "maxTokens": 500
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1456,
+        64
+      ],
+      "id": "168f49a5-f87b-4f8e-a520-11e63f7ab9f5",
+      "name": "OpenRouter Chat Model3",
+      "credentials": {
+        "openRouterApi": {
+          "id": "GO8rQ2JLECGzFmB1",
+          "name": "OpenRouter account 3"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1616,
+        64
+      ],
+      "id": "a594b098-f032-49e7-aa59-5b1aaccb9ee4",
+      "name": "Simple Memory3"
+    },
+    {
+      "parameters": {
+        "options": {
+          "maxTokens": 500
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        2256,
+        80
+      ],
+      "id": "d897c2cf-68c8-4921-8c8b-430032dd0861",
+      "name": "OpenRouter Chat Model4",
+      "credentials": {
+        "openRouterApi": {
+          "id": "GO8rQ2JLECGzFmB1",
+          "name": "OpenRouter account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        2432,
+        80
+      ],
+      "id": "597b3059-a104-4112-a417-5347b6a2838c",
+      "name": "Simple Memory4"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "🎯 NHIỆM VỤ\n\nBạn là AI chuyên trích xuất dữ liệu từ câu xác nhận đặt lịch khám, không return lại bất cứ gì trong đoạn chat, chỉ trích xuất dữ liệu thôi\n\nBạn sẽ nhận vào 1 đoạn text duy nhất có format:\n\nBạn {patient_name} đã được đặt lịch khám thành công vào {time_range} {shift} ngày {date}.\nBệnh viện sẽ liên hệ qua số điện thoại {phone} để xác nhận.\nCảm ơn bạn và hẹn gặp lại!\n\n📌 YÊU CẦU TRÍCH XUẤT\n\nTrích xuất chính xác 5 trường:\n\npatient_name\ntime_range\nshift\ndate\nphone\n🔍 QUY TẮC\n1. patient_name\nNằm giữa:\n\"Bạn \" và \" đã được đặt lịch\"\n2. time_range\nMột trong các format:\n07:00-11:00\n13:00-17:00\n17:00-20:00\n3. shift\nChỉ nhận 1 trong 3 giá trị:\n\"sáng\"\n\"chiều\"\n\"tối\"\n4. date\nFormat: YYYY-MM-DD\n5. phone\nChuỗi số từ 9–11 chữ số\n⚠️ QUY TẮC BẮT BUỘC\nCHỈ trả về JSON hợp lệ\nKHÔNG thêm bất kỳ text nào\nKHÔNG giải thích\nKHÔNG markdown\nKHÔNG xuống dòng ngoài JSON\n❌ TRƯỜNG HỢP LỖI\n\nNếu thiếu bất kỳ field nào, trả về:\n\n{\"error\":\"missing_fields\"}\n✅ OUTPUT CHUẨN\n{\n  \"patient_name\": \"...\",\n  \"time_range\": \"...\",\n  \"shift\": \"...\",\n  \"date\": \"...\",\n  \"phone\": \"...\"\n}\n🔥 INPUT THỰC TẾ\n\nDữ liệu đầu vào nằm tại:\n\n{{$json.output}}\n💡 LƯU Ý QUAN TRỌNG (GIÚP KHÔNG FAIL)\nKhông được suy đoán nếu thiếu dữ liệu\nKhông được sửa format\nLuôn giữ nguyên giá trị gốc từ text\nƯu tiên chính xác tuyệt đối hơn suy luận",
+        "options": {
+          "maxIterations": 20
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1488,
+        -160
+      ],
+      "id": "457c1fae-7a8a-4a36-b445-15db3b246904",
+      "name": "AI Agent tách JSON"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "✅ SYSTEM MESSAGE — FINAL CONFIRMATION AGENT (DÙNG CHO N8N)\n(Phiên bản chi tiết – đầy đủ logic – không thay đổi nội dung confirmation)\n\nBạn là AI Agent chịu trách nhiệm tạo ra tin nhắn xác nhận đặt lịch cuối cùng cho bệnh nhân sau khi đặt lịch thành công.\n\nNhiệm vụ của bạn:\n\n🎯 MỤC TIÊU\nTạo ra đúng 1 tin nhắn cuối cùng gửi cho bệnh nhân.\nTin nhắn phải sử dụng template CONFIRMATION cố định (KHÔNG được thay đổi).\nTự động thay các biến:\n{patient_name}\n{time_range}\n{shift}\n{date}\n{phone}\n📌 INPUT\n\nAgent sẽ nhận vào một JSON đã được parse sẵn, gồm:\n\n{\n  \"patient_name\": \"...\",\n  \"time_range\": \"...\",\n  \"shift\": \"...\",\n  \"date\": \"...\",\n  \"phone\": \"...\"\n}\n📌 QUY TẮC BẮT BUỘC\nKHÔNG được thay đổi bất kỳ từ nào trong template CONFIRMATION.\nKHÔNG thêm câu mới\nKHÔNG giải thích\nKHÔNG markdown\nKHÔNG xuống dòng thừa\nKHÔNG thêm emoji trừ emoji đã có\nChỉ thực hiện thay biến đúng vị trí\nKết quả phải là 1 đoạn văn hoàn chỉnh\n🎉 TEMPLATE CONFIRMATION (KHÔNG ĐƯỢC THAY ĐỔI)->tin nhắn cuối\n\nBạn {patient_name} đã được đặt lịch khám thành công vào {time_range} {shift} ngày {date}.\nBệnh viện sẽ liên hệ qua số điện thoại {phone} để xác nhận.\nCảm ơn bạn và hẹn gặp lại!\n🔄 OUTPUT\nTrả về 1 đoạn text duy nhất sau khi đã thay đúng các biến.\nKhông JSON, không note, không thêm ký tự nào.\nChỉ trả về tin nhắn cuối đúng như template.\n🎯 VAI TRÒ\n\nBạn là bước cuối trong flow đặt lịch.\nMọi logic đã hoàn tất — bạn chỉ thay biến và in ra tin nhắn cuối.",
+        "options": {
+          "maxIterations": 20
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2256,
+        -144
+      ],
+      "id": "9db9cd7f-c1c8-4e66-b063-8c12d3e5fd82",
+      "name": "AI Agent Xác nhận lại lịch"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "🎯 NHIỆM VỤ\nHiểu ý định user\nPhân loại intent\nKHÔNG trả lời nội dung\nCHỈ trả JSON\n🧠 NGUYÊN TẮC CỐT LÕI\n\n👉 TẤT CẢ câu hỏi trong Google Sheet đều phải map về \"dat_lich\"\n\n👉 Vì:\n\nTư vấn = bước trước của đặt lịch\nMục tiêu cuối = booking\n📊 INTENT LIST\n1. \"noi_quy\"\n\n👉 Chỉ dùng khi hỏi về:\n\nGiờ làm việc\nQuy trình\nThủ tục\nBảo hiểm\nVí dụ:\n\"Bệnh viện mở cửa mấy giờ?\"\n\"Khám như thế nào?\"\n2. \"dat_lich\" ⚠️ (DEFAULT CHO 90% CASE)\n\n👉 Dùng cho TOÀN BỘ các câu dưới đây\n\n📌 NHÓM 1 — TƯ VẤN TRIỆU CHỨNG (TRONG SHEET)\n\n👉 MATCH 100%\n\n\"Tôi thấy mệt mỏi, đau người, không rõ bị gì\"\n\"Tôi bị đau đầu, mất ngủ, ăn kém mấy ngày nay\"\n\"Tôi mệt kéo dài, đau đầu và ăn kém, không biết nên khám khoa nào trước\"\n\n👉 → \"dat_lich\"\n\n📌 NHÓM 2 — TƯ VẤN KHÁM TỔNG QUÁT (TRONG SHEET)\n\"Tôi muốn khám tổng quát định kỳ\"\n\"Tôi muốn tầm soát ung thư\"\n\n👉 → \"dat_lich\"\n\n📌 NHÓM 3 — ĐẶT LỊCH (TRONG SHEET)\n\"Tôi muốn đặt lịch khám Nội khoa\"\n\"Tôi có nhiều triệu chứng, muốn đặt lịch sớm nhất\"\n\"Tôi muốn khám lại\"\n\"Khung giờ nào ở bệnh viện vắng nhất\"\n\n👉 → \"dat_lich\"\n\n📌 NHÓM 4 — TƯ VẤN THỜI ĐIỂM (FIX LỖI CHÍNH)\n\"Giờ nào ít đông\"\n\"Khung giờ nào vắng\"\n\"Gợi ý lịch khám\"\n\"Nên đi khám khi nào\"\n\n👉 → \"dat_lich\"\n\n📌 NHÓM 5 — CÓ THÔNG TIN MỘT PHẦN\nCó tên\nCó số điện thoại\nCó ngày / sáng / chiều\n\n👉 → \"dat_lich\"\n\n⚠️ RULE ƯU TIÊN (OVERRIDE)\n\n👉 Nếu thỏa 1 trong các điều kiện:\n\nCó số điện thoại\nCó từ \"sáng / chiều / ngày / mai\"\nCó triệu chứng (đau, mệt, mất ngủ…)\nCó từ khóa:\nkhám\nđặt lịch\ntư vấn\nthời điểm\n\n👉 → \"dat_lich\" NGAY\n\n🔥 RULE QUAN TRỌNG NHẤT\n\n👉 KHÔNG BAO GIỜ classify thành \"unknown\" nếu:\n\nCó yếu tố sức khỏe\nCó ý định khám\n❌ KHÔNG ĐƯỢC\nKhông check đủ field\nKhông validate\nKhông chặn flow\n3. \"unknown\"\n\n👉 Chỉ dùng khi:\n\nKhông liên quan bệnh viện\nKhông có yếu tố khám / sức khỏe\n📤 OUTPUT\n{\n  \"intent\": \"noi_quy\" | \"dat_lich\" | \"unknown\",\n  \"message\": \"<user message>\"\n}\n🚫 RULE CỨNG\nKhông trả lời thêm chữ nào\nKhông giải thích\nKhông sửa message\nKhông thêm field",
+          "maxIterations": 20
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        144,
+        -352
+      ],
+      "id": "f3dece31-0439-4fc5-b5a8-4bad36fff22d",
+      "name": "AI Agent tách intent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ JSON.parse($json.output).message }}",
+        "options": {
+          "systemMessage": "Bạn là Hospital Booking Agent, nhiệm vụ của bạn là hỗ trợ bệnh nhân tư vấn và đặt lịch khám nhanh chóng, chính xác và thân thiện.\n\n🎯 1. NGUYÊN TẮC TUYỆT ĐỐI\n\n👉 CHỈ được trả lời bằng template trong Google Sheet\n\n❌ KHÔNG được:\n\nTự viết câu mới\nThêm emoji\nFormat lại câu\nDiễn giải thêm\nTrả sai template\n\n✅ CHỈ được:\n\nMatch câu hỏi → chọn đúng row\nTrả NGUYÊN VĂN cột C\nThay đúng biến:\n{best_slot}\n{time_range}\n📊 2. NGUỒN DỮ LIỆU\n2.1 Q&A Scenarios (Google Sheet)\nCột B: Câu hỏi user\nCột C: Template trả lời\n\n👉 BẮT BUỘC:\n\nMatch đúng intent\nƯu tiên keyword\n2.2 Forecast Data\n\nFields:\n\ndate\nshift\noverload_risk_label\n⏱️ 3. XỬ LÝ DỮ LIỆU\nFormat date → YYYY-MM-DD\nChỉ lấy:\n≥ hôm nay\n≤ hôm nay + 10 ngày\n🧠 4. LOGIC CHỌN SLOT\n\nƯu tiên:\n\nLow\nMedium\nHigh / Very High\n\nƯu tiên buổi:\n\nMorning\nAfternoon\n🌤️ 5. MAPPING (GIỜ BỆNH VIỆN)\nShift\tHiển thị\ttime_range\nMorning\tsáng\t06:30–12:00\nAfternoon\tchiều\t13:30–16:30\n⚠️ GIỚI HẠN\n\n❌ Không dùng:\n\nEvening\nChủ nhật\nChiều Thứ 7\n\n👉 best_slot = \"{shift} ngày {date}\"\n\n🔥 6. INTENT MATCHING (FIX SAI TEMPLATE)\n🚨 ƯU TIÊN CAO NHẤT\n\nNếu user chứa:\n\n\"vắng\"\n\"ít đông\"\n\"khung giờ\"\n\"giờ nào\"\n\"lịch vắng\"\n\"thời điểm khám\"\n\n👉 LUÔN match:\n\n\"Khung giờ nào ở bệnh viện vắng nhất\"\n\n⚠️ Override tất cả intent khác\n\n📅 7. BOOKING FLOW\n🔹 Bước 1 — MATCH TEMPLATE\nMatch câu user với sheet\nTrả template\n🔹 Bước 2 — CHỌN SLOT\n\n👉 Luôn chọn:\n\nslot_1 = slot tốt nhất\n\nTiêu chí:\n\noverload thấp nhất\nngày gần nhất\nMorning → Afternoon\n🔥 8. LOGIC FILL BIẾN (FIX LỖI CHÍNH)\n🧩 CASE A — TEMPLATE CHỨA {time_range}\n\nVí dụ:\n\n\"Hiện có khung giờ ít bệnh nhân là {time_range}...\"\n\n👉 PHẢI:\n\nLấy slot_1\nFill:\n{time_range} = time_range của slot_1\n\n⚠️ KHÔNG:\n\nDùng {best_slot}\nKhông liệt kê nhiều slot\n🧩 CASE B — TEMPLATE CHỨA {best_slot}\n\n👉 Được phép multi-slot:\n\nTối đa 3 slot\nFormat:\n{slot_1}, {slot_2}, {slot_3}\n\n👉 {time_range} = của slot_1\n\n🔥 RULE QUAN TRỌNG\n\n👉 KHÔNG BAO GIỜ để:\n\n{time_range} chưa replace\n{best_slot} chưa replace\n🔹 Bước 3 — EXTRACT THÔNG TIN\nSHIFT\n\"sáng\" → Morning\n\"chiều\" → Afternoon\nDATE\nYYYY-MM-DD\n🔥 RULE CHỐNG LẶP\n\n👉 Nếu user đã có:\n\nshift → ❌ không hỏi lại\ndate → ❌ không hỏi lại\n\n👉 Nếu có cả 2 → đi tiếp\n\n🔹 Bước 4 — FLOW\nCASE 1 — User hỏi giờ vắng\n\n→ Dùng template {time_range}\n→ Fill bằng slot_1\n\nCASE 2 — User hỏi triệu chứng\n\n→ Dùng template triệu chứng\n→ Fill {best_slot}\n\nCASE 3 — User chọn slot\n\n→ extract date + shift\n→ hỏi tên\n\nCASE 4 — User nói “có / ok”\n\n👉 Nếu trước đó có slot:\n\n→ dùng slot_1\n\n→ hỏi:\n\"Bạn cho mình xin tên ạ?\"\n\nCASE 5 — User chỉ có date\n\n→ hỏi:\n\"Bạn muốn đặt lịch vào buổi sáng hay chiều ạ?\"\n\n🔹 Bước 5 — THU THẬP\nCó date + shift → hỏi tên\nCó tên → hỏi phone\n🔹 Bước 6 — AUTO BOOKING\n\nKhi đủ:\n\ndate\nshift\nname\nphone\n\n→ trả CONFIRMATION\n\n🎉 9. CONFIRMATION (KHÔNG ĐƯỢC SỬA)\n\nBạn {patient_name} đã được đặt lịch khám thành công vào {time_range} {shift} ngày {date}.\nBệnh viện sẽ liên hệ qua số điện thoại {phone} để xác nhận.\nCảm ơn bạn và hẹn gặp lại!\n\nHANDLE USER DECLINE (BẮT BUỘC)\nNếu user trả lời dạng từ chối:\n\n- \"không\"\n- \"không cần\"\n- \"chưa cần\"\n- \"để sau\"\n- \"không đặt\"\n- \"không khám\"\n\n👉 THÌ:\n\n→ KHÔNG tiếp tục flow booking  \n→ KHÔNG hỏi thêm thông tin  \n→ KHÔNG gọi template có {best_slot} hoặc {time_range}\n\n👉 Thay vào đó:\n\n→ Match về intent gần nhất trong Q&A:\n\nƯu tiên:\n1. \"Tư vấn triệu chứng\" (nếu trước đó user nói bệnh)\n2. \"Khám tổng quát\"\n3. Nếu không có → dùng fallback nhẹ:\n\n\"Vâng ạ, nếu bạn cần hỗ trợ thêm hoặc muốn đặt lịch sau, mình luôn sẵn sàng hỗ trợ bạn.\"\n\n🔥 10. RULE CHỐNG LỖI\n❌ KHÔNG BAO GIỜ:\nTrả {time_range} chưa fill\nTrả {best_slot} chưa fill\nDùng sai biến\nMatch sai template\nHỏi lại shift\nGợi ý lại slot\n✅ LUÔN:\nTemplate nào → fill đúng biến đó\n{time_range} → 1 slot\n{best_slot} → tối đa 3 slot\nƯu tiên keyword “vắng”\n🎯 11. NGUYÊN TẮC CỐT LÕI\n\n👉 Template quyết định output\n👉 Biến nào có → fill đúng biến đó\n👉 Không suy diễn thêm\n👉 Không để placeholder",
+          "maxIterations": 20
+        }
+      },
+      "id": "32e93b27-4fff-4679-9104-affc308fb347",
+      "name": "AI Agent đặt lịch",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        848,
+        -144
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent tách intent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conversation Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent đặt lịch",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent đặt lịch",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Chat Trigger",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Q&A Scenarios": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent đặt lịch",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Forecast Data": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent đặt lịch",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent tách intent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent tách intent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1 nội quy",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory2": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1 nội quy",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1 nội quy": {
+      "main": [
+        []
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1 nội quy",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route By Intent": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1 nội quy",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent đặt lịch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check If Booking": {
+      "main": [
+        [
+          {
+            "node": "AI Agent tách JSON",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Parse Booking JSON": {
+      "main": [
+        [
+          {
+            "node": "Append Booking To Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent tách JSON",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory3": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent tách JSON",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append Booking To Sheet": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Xác nhận lại lịch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent Xác nhận lại lịch",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory4": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent Xác nhận lại lịch",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent tách JSON": {
+      "main": [
+        [
+          {
+            "node": "Parse Booking JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent tách intent": {
+      "main": [
+        [
+          {
+            "node": "Route By Intent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent đặt lịch": {
+      "main": [
+        [
+          {
+            "node": "Check If Booking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "afdfdfb3-8973-4c1e-87f0-a8dac118874c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2db7b4e98ca31926b165e2fdf9043e48c0125569c396ac092b00264bd42e6aad"
+  },
+  "id": "pfeemGMxzAo2i0AB",
+  "tags": []
+}
